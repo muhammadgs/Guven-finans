@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Sahibkar qeydiyyatı | Güvən Finans{% endblock %}
+
+{% block content %}
+<section class="bg-gray-50 py-16">
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto max-w-3xl rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-100">
+            <div class="mb-8 text-center">
+                <h1 class="text-3xl font-bold text-gray-900">Sahibkar qeydiyyatı</h1>
+                <p class="mt-2 text-base text-gray-600">Zəhmət olmasa məlumatlarınızı daxil edin</p>
+            </div>
+
+            {% if messages %}
+                <div class="mb-6 space-y-3">
+                    {% for message in messages %}
+                        <div class="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="mb-6 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="space-y-8">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div>
+                        <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-semibold text-gray-700">Ad</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.first_name.errors|join:" " }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-semibold text-gray-700">Soyad</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.last_name.errors|join:" " }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.phone.id_for_label }}" class="block text-sm font-semibold text-gray-700">Mobil nömrə</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.phone.errors|join:" " }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.email.id_for_label }}" class="block text-sm font-semibold text-gray-700">E-poçt</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.email.errors|join:" " }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.company_name.id_for_label }}" class="block text-sm font-semibold text-gray-700">Şirkət adı</label>
+                        {{ form.company_name }}
+                        {% if form.company_name.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.company_name.errors|join:" " }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.company_email.id_for_label }}" class="block text-sm font-semibold text-gray-700">Şirkət e-poçtu</label>
+                        {{ form.company_email }}
+                        {% if form.company_email.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.company_email.errors|join:" " }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.company_phone.id_for_label }}" class="block text-sm font-semibold text-gray-700">Şirkət nömrəsi</label>
+                        {{ form.company_phone }}
+                        {% if form.company_phone.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.company_phone.errors|join:" " }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="{{ form.company_address.id_for_label }}" class="block text-sm font-semibold text-gray-700">Şirkət ünvanı</label>
+                        {{ form.company_address }}
+                        {% if form.company_address.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.company_address.errors|join:" " }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-end">
+                    <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-blue-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        Göndər və təsdiqə göndər
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
