@@ -41,13 +41,21 @@ def _notify_admin(registration: OwnerRegistration) -> None:
         pass
 
 
+def register_choice(request: HttpRequest) -> HttpResponse:
+    return render(request, "accounts/register_choice.html")
+
+
+def register_worker(request: HttpRequest) -> HttpResponse:
+    return HttpResponse("İşçi qeydiyyat formu gələcək")
+
+
 def register_owner(request: HttpRequest) -> HttpResponse:
     if request.method == "POST":
         form = OwnerRegistrationForm(request.POST)
         if form.is_valid():
             registration = form.save()
             _notify_admin(registration)
-            return redirect(reverse("accounts:owner-thanks"))
+            return redirect(reverse("owner-thanks"))
         messages.error(request, "Zəhmət olmasa formdakı səhvləri düzəldin.")
     else:
         form = OwnerRegistrationForm()
