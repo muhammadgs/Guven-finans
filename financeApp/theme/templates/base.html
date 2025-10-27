@@ -2,25 +2,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Django Tailwind</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Güvən Finans | Smarter Finance{% endblock %}</title>
+    <meta name="description" content="Güvən Finans helps ambitious teams unlock smarter finance, stronger growth, and confident decision-making.">
+    <meta property="og:title" content="Güvən Finans">
+    <meta property="og:description" content="Smarter finance solutions for revenue growth, cost optimization, and data-driven strategy.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri|default:'/' }}">
     {% tailwind_css %}
 </head>
-
-<body class="bg-gray-50 text-black font-serif leading-normal tracking-normal">
-
-    <div class="toast toast-top toast-end">
-        <div class="alert alert-info">
-            <span>Hello from daisyUi 👋</span>
+<body class="bg-slate-950 text-slate-100 antialiased">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-sky-500 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
+    <header class="sticky top-0 z-40 border-b border-slate-800 bg-slate-950/90 backdrop-blur">
+        <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8" aria-label="Primary">
+            <a href="/" class="flex items-center gap-3 text-lg font-semibold tracking-tight text-white focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400">
+                <img src="{% static 'theme/static_src/SVG.svg' %}" alt="Güvən Finans" class="h-8 w-auto">
+                <span>Güvən Finans</span>
+            </a>
+            <div class="flex items-center gap-3 text-sm font-medium">
+                <a href="/accounts/login/" class="rounded-full border border-sky-400/30 px-4 py-2 text-slate-100 transition hover:border-sky-400 hover:text-white focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400">Log in</a>
+                <a href="/accounts/register/" class="rounded-full bg-sky-500 px-4 py-2 text-white shadow-lg shadow-sky-500/30 transition hover:bg-sky-400 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-200">Register</a>
+            </div>
+        </nav>
+    </header>
+    <main id="main">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="border-t border-slate-800 bg-slate-950/80">
+        <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-10 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+            <p>&copy; {% now "Y" %} Güvən Finans. All rights reserved.</p>
+            <div class="flex flex-wrap items-center gap-4">
+                <a href="/privacy/" class="transition hover:text-slate-200 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400">Privacy</a>
+                <a href="/terms/" class="transition hover:text-slate-200 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400">Terms</a>
+                <a href="/contact/" class="transition hover:text-slate-200 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400">Contact</a>
+            </div>
         </div>
-    </div>
-
-<div class="container mx-auto">
-    <section class="flex items-center justify-center h-screen">
-        <h1 class="text-5xl">Django + Tailwind = ❤️</h1>
-    </section>
-</div>
+    </footer>
 </body>
 </html>
