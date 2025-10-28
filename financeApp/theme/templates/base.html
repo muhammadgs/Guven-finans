@@ -102,8 +102,8 @@
     <header id="main-header" class="fixed top-0 z-40 w-full transition-all duration-300 text-white">
 
         <div class="px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between py-2 max-w-7xl mx-auto">
-                <div class="flex items-center gap-4 text-sm font-poppins-light">
+            <div class="flex items-center justify-between py-3 max-w-7xl">
+                <div class="flex items-center gap-6 text-sm font-poppins-light pl-12">
                     <a href="mailto:info@guvenfinans.az" class="nav-link flex items-center gap-2 hover:text-blue-300">
                         <i class="fas fa-envelope"></i> info@guvenfinans.az
                     </a>
@@ -132,14 +132,15 @@
 
         <nav class="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8" aria-label="Primary">
 
-            <div class="flex-shrink-0">
+            {% comment %} DƏYİŞİKLİK: Sola padding əlavə edildi (pl-4) {% endcomment %}
+            <div class="flex-shrink-0 pl-12">
                 <a href="/">
                     <h1 class="font-cal-sans text-3xl logo-text transition-colors duration-300">Güvən Finans</h1>
                     <p class="font-poppins-light text-sm logo-tagline transition-colors duration-300">Uğurlar Güvənlə Başlar</p>
                 </a>
             </div>
 
-            <div class="flex-1 hidden md:flex items-center justify-center gap-6 text-base font-poppins-light">
+            <div class="flex-1 hidden md:flex items-center justify-center gap-8 text-base font-poppins-light pl-10">
                 <a href="/" class="nav-link active-link text-white transition-colors duration-300">Ana Səhifə</a>
                 <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Xidmətlər</a>
                 <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Komanda</a>
@@ -148,7 +149,7 @@
                 <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Yazarlar</a>
             </div>
 
-            <div class="flex-shrink-0 flex items-center gap-3">
+            <div class="flex-shrink-0 flex items-center gap-3 pr-12">
                 <a href="{% url 'register-choice' %}" id="register-btn" class="font-cal-sans hidden sm:inline-block rounded-full border px-5 py-2.5 text-sm transition-all duration-300">
                     Qeydiyyatdan keç
                 </a>
