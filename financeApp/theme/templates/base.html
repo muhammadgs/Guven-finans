@@ -14,14 +14,12 @@
     {% tailwind_css %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    {% comment %} Şriftlər {% endcomment %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/public/web/cal-sans.css" rel="stylesheet">
 
-    {% comment %} Scroll zamanı rəng dəyişimi üçün stillər {% endcomment %}
-    <style>
+     <style>
         /* Default (Şəffaf Header) */
         .nav-link, .logo-text {
             color: white;
@@ -49,7 +47,7 @@
             color: #2563EB; /* blue-600 */
         }
         #login-btn {
-            background-color: #3B82F6; /* blue-500 (dizayna uyğun) */
+            background-color: #3B82F6; /* blue-500 */
             color: white;
         }
         #login-btn:hover {
@@ -85,7 +83,6 @@
         .header-scrolled #header-divider {
             border-color: #E5E7EB; /* gray-200 */
         }
-
         .header-scrolled #register-btn {
             border-color: #2563EB; /* blue-600 */
             color: #2563EB; /* blue-600 */
@@ -102,14 +99,10 @@
 <body class="bg-white text-gray-900 antialiased font-poppins-light">
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
 
-    {% comment %}
-    YENİ HEADER:
-    Struktur tamamilə şəkilə uyğun olaraq yenidən quruldu.
-    {% endcomment %}
     <header id="main-header" class="fixed top-0 z-40 w-full transition-all duration-300 text-white">
 
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between py-2">
+        <div class="px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between py-2 max-w-7xl mx-auto">
                 <div class="flex items-center gap-4 text-sm font-poppins-light">
                     <a href="mailto:info@guvenfinans.az" class="nav-link flex items-center gap-2 hover:text-blue-300">
                         <i class="fas fa-envelope"></i> info@guvenfinans.az
@@ -133,34 +126,35 @@
                     </a>
                 </div>
             </div>
-            <hr id="header-divider" class="transition-colors duration-300" />
         </div>
 
-        <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8" aria-label="Primary">
-            <div>
+        <hr id="header-divider" class="transition-colors duration-300" />
+
+        <nav class="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8" aria-label="Primary">
+
+            <div class="flex-shrink-0">
                 <a href="/">
                     <h1 class="font-cal-sans text-3xl logo-text transition-colors duration-300">Güvən Finans</h1>
                     <p class="font-poppins-light text-sm logo-tagline transition-colors duration-300">Uğurlar Güvənlə Başlar</p>
                 </a>
             </div>
 
-            <div class="flex items-center gap-6">
-                <div class="hidden md:flex items-center gap-6 text-base font-poppins-light">
-                    <a href="/" class="nav-link active-link text-white transition-colors duration-300">Ana Səhifə</a>
-                    <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Xidmətlər</a>
-                    <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Komanda</a>
-                    <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Biz Kimik?</a>
-                    <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Bloqlar</a>
-                    <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Yazarlar</a>
-                </div>
-                <div class="flex items-center gap-3">
-                    <a href="{% url 'register-choice' %}" id="register-btn" class="font-cal-sans hidden sm:inline-block rounded-full border px-5 py-2.5 text-sm transition-all duration-300">
-                        Qeydiyyatdan keç
-                    </a>
-                    <a href="#" id="login-btn" class="font-cal-sans hidden sm:inline-block rounded-full px-5 py-2.5 text-sm shadow-sm transition-all duration-300">
-                        Giriş et
-                    </a>
-                </div>
+            <div class="flex-1 hidden md:flex items-center justify-center gap-6 text-base font-poppins-light">
+                <a href="/" class="nav-link active-link text-white transition-colors duration-300">Ana Səhifə</a>
+                <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Xidmətlər</a>
+                <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Komanda</a>
+                <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Biz Kimik?</a>
+                <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Bloqlar</a>
+                <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Yazarlar</a>
+            </div>
+
+            <div class="flex-shrink-0 flex items-center gap-3">
+                <a href="{% url 'register-choice' %}" id="register-btn" class="font-cal-sans hidden sm:inline-block rounded-full border px-5 py-2.5 text-sm transition-all duration-300">
+                    Qeydiyyatdan keç
+                </a>
+                <a href="#" id="login-btn" class="font-cal-sans hidden sm:inline-block rounded-full px-5 py-2.5 text-sm shadow-sm transition-all duration-300">
+                    Giriş et
+                </a>
             </div>
         </nav>
     </header>
@@ -169,7 +163,6 @@
         {% block content %}{% endblock %}
     </main>
 
-    {% comment %} Footer olduğu kimi qalır... {% endcomment %}
     <footer class="border-t bg-gray-900 text-gray-400">
         <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-12">
@@ -223,7 +216,6 @@
         </div>
     </footer>
 
-    {% comment %} Header davranışı üçün olan JS olduğu kimi qalır... {% endcomment %}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const header = document.getElementById('main-header');
