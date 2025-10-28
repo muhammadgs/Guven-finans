@@ -13,47 +13,155 @@
     <meta property="og:url" content="{{ request.build_absolute_uri|default:'/' }}">
     {% tailwind_css %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    {% comment %} Şriftlər {% endcomment %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/public/web/cal-sans.css" rel="stylesheet">
+
+    {% comment %} Scroll zamanı rəng dəyişimi üçün stillər {% endcomment %}
+    <style>
+        /* Default (Şəffaf Header) */
+        .nav-link, .logo-text {
+            color: white;
+        }
+        .logo-tagline {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .nav-link.active-link {
+            font-weight: 600;
+        }
+        .social-icon {
+            color: white;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        .social-icon:hover {
+            background-color: white;
+            color: #2563EB; /* blue-600 */
+        }
+        #register-btn {
+            border-color: white;
+            color: white;
+        }
+        #register-btn:hover {
+            background-color: white;
+            color: #2563EB; /* blue-600 */
+        }
+        #login-btn {
+            background-color: #3B82F6; /* blue-500 (dizayna uyğun) */
+            color: white;
+        }
+        #login-btn:hover {
+            background-color: #2563EB; /* blue-600 */
+        }
+        #header-divider {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Scrolled (Ağ Header) */
+        .header-scrolled .nav-link,
+        .header-scrolled .logo-text,
+        .header-scrolled .social-icon {
+            color: #374151; /* text-gray-700 */
+        }
+        .header-scrolled .logo-tagline {
+            color: #6B7280; /* text-gray-500 */
+        }
+        .header-scrolled .nav-link.active-link {
+            color: #2563EB; /* text-blue-600 */
+        }
+        .header-scrolled .nav-link:hover,
+        .header-scrolled .social-icon:hover {
+            color: #2563EB; /* text-blue-600 */
+        }
+        .header-scrolled .social-icon {
+            border-color: #D1D5DB; /* gray-300 */
+        }
+        .header-scrolled .social-icon:hover {
+            background-color: #EFF6FF; /* blue-50 */
+            border-color: #93C5FD; /* blue-300 */
+        }
+        .header-scrolled #header-divider {
+            border-color: #E5E7EB; /* gray-200 */
+        }
+
+        .header-scrolled #register-btn {
+            border-color: #2563EB; /* blue-600 */
+            color: #2563EB; /* blue-600 */
+        }
+        .header-scrolled #register-btn:hover {
+            background-color: #EFF6FF; /* blue-50 */
+        }
+        .header-scrolled #login-btn {
+            background-color: #3B82F6; /* blue-500 */
+            color: white;
+        }
+    </style>
 </head>
-<body class="bg-white text-gray-900 antialiased">
+<body class="bg-white text-gray-900 antialiased font-poppins-light">
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
 
-    <header class="sticky top-0 z-40 w-full bg-white shadow-md">
-        <div class="bg-gray-100 py-2">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 text-sm text-gray-600">
-                <div class="flex items-center gap-4">
-                    <a href="mailto:info@guvenfinans.az" class="hover:text-blue-600">
-                        <i class="fas fa-envelope mr-1"></i> info@guvenfinans.az
+    {% comment %}
+    YENİ HEADER:
+    Struktur tamamilə şəkilə uyğun olaraq yenidən quruldu.
+    {% endcomment %}
+    <header id="main-header" class="fixed top-0 z-40 w-full transition-all duration-300 text-white">
+
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between py-2">
+                <div class="flex items-center gap-4 text-sm font-poppins-light">
+                    <a href="mailto:info@guvenfinans.az" class="nav-link flex items-center gap-2 hover:text-blue-300">
+                        <i class="fas fa-envelope"></i> info@guvenfinans.az
                     </a>
-                    <a href="tel:+994513212189" class="hover:text-blue-600">
-                        <i class="fas fa-phone-alt mr-1"></i> (+994) 51 321 2189
+                    <a href="tel:+994513210989" class="nav-link hidden sm:flex items-center gap-2 hover:text-blue-300">
+                        <i class="fas fa-phone-alt"></i> (+994) 51 321 0989
                     </a>
                 </div>
-                <div class="flex items-center gap-4">
-                    <a href="#" class="hover:text-blue-600"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="hover:text-blue-600"><i class="fab fa-linkedin-in"></i></a>
-                    <a href="#" class="hover:text-blue-600"><i class="fab fa-instagram"></i></a>
+                <div class="flex items-center gap-3">
+                    <a href="#" class="social-icon flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="#" class="social-icon flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-icon flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-icon flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
                 </div>
             </div>
+            <hr id="header-divider" class="transition-colors duration-300" />
         </div>
-        
+
         <nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8" aria-label="Primary">
-            <a href="/" class="flex items-center gap-2">
-                <img src="{% static 'images/logo.png' %}" alt="Güvən Finans" class="h-10 w-auto">
-                <span class="text-2xl font-bold text-gray-800">Güvən Finans</span>
-            </a>
-            <div class="hidden md:flex items-center gap-6 text-base font-medium text-gray-700">
-                <a href="/" class="text-blue-600 font-semibold">Ana Səhifə</a>
-                <a href="#" class="hover:text-blue-600">Xidmətlər</a>
-                <a href="#" class="hover:text-blue-600">Komanda</a>
-                <a href="#" class="hover:text-blue-600">Biz Kimik?</a>
-                <a href="#" class="hover:text-blue-600">Bloqlar</a>
-                <a href="#" class="hover:text-blue-600">Yazarlar</a>
-            </div>
-            <div class="flex items-center gap-3">
-                <a href="{% url 'register-choice' %}" class="rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
-                    Qeydiyyatdan keç
+            <div>
+                <a href="/">
+                    <h1 class="font-cal-sans text-3xl logo-text transition-colors duration-300">Güvən Finans</h1>
+                    <p class="font-poppins-light text-sm logo-tagline transition-colors duration-300">Uğurlar Güvənlə Başlar</p>
                 </a>
+            </div>
+
+            <div class="flex items-center gap-6">
+                <div class="hidden md:flex items-center gap-6 text-base font-poppins-light">
+                    <a href="/" class="nav-link active-link text-white transition-colors duration-300">Ana Səhifə</a>
+                    <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Xidmətlər</a>
+                    <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Komanda</a>
+                    <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Biz Kimik?</a>
+                    <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Bloqlar</a>
+                    <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Yazarlar</a>
                 </div>
+                <div class="flex items-center gap-3">
+                    <a href="{% url 'register-choice' %}" id="register-btn" class="font-cal-sans hidden sm:inline-block rounded-full border px-5 py-2.5 text-sm transition-all duration-300">
+                        Qeydiyyatdan keç
+                    </a>
+                    <a href="#" id="login-btn" class="font-cal-sans hidden sm:inline-block rounded-full px-5 py-2.5 text-sm shadow-sm transition-all duration-300">
+                        Giriş et
+                    </a>
+                </div>
+            </div>
         </nav>
     </header>
 
@@ -61,6 +169,7 @@
         {% block content %}{% endblock %}
     </main>
 
+    {% comment %} Footer olduğu kimi qalır... {% endcomment %}
     <footer class="border-t bg-gray-900 text-gray-400">
         <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-12">
@@ -113,5 +222,36 @@
             </div>
         </div>
     </footer>
+
+    {% comment %} Header davranışı üçün olan JS olduğu kimi qalır... {% endcomment %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.getElementById('main-header');
+            if (!header) return;
+
+            let lastScrollTop = 0;
+
+            window.addEventListener('scroll', () => {
+                let scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+                if (scrollTop > lastScrollTop && scrollTop > 200) {
+                    // Scroll Down - Hide header
+                    header.style.transform = 'translateY(-100%)';
+                } else {
+                    // Scroll Up - Show header
+                    header.style.transform = 'translateY(0)';
+
+                    if (scrollTop > 50) {
+                        // Add scrolled styles
+                        header.classList.add('bg-white', 'shadow-md', 'header-scrolled');
+                    } else {
+                        // Remove scrolled styles (at top)
+                        header.classList.remove('bg-white', 'shadow-md', 'header-scrolled');
+                    }
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            });
+        });
+    </script>
 </body>
 </html>

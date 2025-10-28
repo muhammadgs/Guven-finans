@@ -9,3 +9,26 @@
   * the scope of this path.
   */
 @source "../../../**/*.{html,py,js}";
+
+/* YENİ ŞRİFT TƏYİNATLARI */
+@layer theme {
+  :root {
+    --font-cal-sans: "Cal Sans", ui-sans-serif, system-ui, sans-serif;
+    --font-poppins: "Poppins", ui-sans-serif, system-ui, sans-serif;
+
+    /* Standart şrifti Poppins olaraq təyin et (amma light üçün class istifadə edəcəyik) */
+    --default-font-family: var(--font-poppins);
+  }
+}
+
+/* YENİ UTILITY SİNİFLƏRİ */
+@layer utilities {
+    .font-cal-sans {
+        font-family: var(--font-cal-sans);
+
+    }
+    .font-poppins-light {
+        font-family: var(--font-poppins);
+        font-weight: 300;
+    }
+}
