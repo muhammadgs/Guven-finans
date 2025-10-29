@@ -55,17 +55,24 @@ HERO BÖLMƏSİ DƏYİŞİKLİKLƏRİ:
     </div>
 </section>
 
-<section class="bg-gray-50 py-16 sm:py-24">
+<section class="bg-white py-16 sm:py-24">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-center">
-            <div>
-                <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Biz kimik?</h2>
-                <p class="mt-6 text-lg text-gray-600">
-                    Rəqəmlərin dili ilə şirkətinizi daha dərindən analiz edərək, mövcud maliyyə vəziyyəti (sağlamlığı) və risklərini (xərclərini) müəyyən edirik. Daxili nəzarət (audit) və onunla həyata keçirilən maliyyə əməliyyatlarına şirkətin zəif tərəflərini müəyyənləşdirir, inkişaf potensialını qiymətləndiririk.
-                </p>
-                <p class="mt-4 text-lg text-gray-600">
-                    Rəqəmsallaşan dövrdə şirkətlərin maliyyə əməliyyatlarının aparılması və idarə edilməsi üçün innovativ həllər təqdim edirik. Proseslərinizi daha şəffaf və idarəolunan hala gətirir, innovativ maliyyə həlləri nəticəsində şirkətinizə dəyər qatır və risklərinizi minimuma endiririk.
-                </p>
+        {% comment %} DƏYİŞİKLİK: 'lg:items-center' silindi {% endcomment %}
+        <div class="grid grid-cols-1 gap-16 lg:grid-cols-2">
+            {% comment %} DƏYİŞİKLİK: Mətn sütununa flex sinifləri əlavə edildi {% endcomment %}
+            <div class="flex flex-col h-full justify-between">
+                {% comment %} DƏYİŞİKLİK: Yuxarı məzmun üçün (h2, p, p) bir qrup yaradıldı {% endcomment %}
+                <div>
+                    <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Biz kimik?</h2>
+                    <p class="mt-6 text-lg text-gray-600">
+                        Rəqəmlərin dili ilə şirkətinizi daha dərindən analiz edərək, mövcud maliyyə vəziyyəti (sağlamlığı) və risklərini (xərclərini) müəyyən edirik. Daxili nəzarət (audit) və onunla həyata keçirilən maliyyə əməliyyatlarına şirkətin zəif tərəflərini müəyyənləşdirir, inkişaf potensialını qiymətləndiririk.
+                    </p>
+                    <p class="mt-4 text-lg text-gray-600">
+                        Rəqəmsallaşan dövrdə şirkətlərin maliyyə əməliyyatlarının aparılması və idarə edilməsi üçün innovativ həllər təqdim edirik. Proseslərinizi daha şəffaf və idarəolunan hala gətirir, innovativ maliyyə həlləri nəticəsində şirkətinizə dəyər qatır və risklərinizi minimuma endiririk.
+                    </p>
+                </div> {% comment %} DƏYİŞİKLİK: Yuxarı məzmun qrupu bağlandı {% endcomment %}
+
+                {% comment %} Bu 'ul' elementi 'justify-between' sayəsində sütunun ən altına itələnəcək {% endcomment %}
                 <ul class="mt-8 space-y-4">
                     <li class="flex items-start gap-4">
                         <div class="flex-shrink-0"><i class="fas fa-chart-line text-2xl text-blue-600"></i></div>
@@ -82,7 +89,7 @@ HERO BÖLMƏSİ DƏYİŞİKLİKLƏRİ:
                 </ul>
             </div>
             <div class="mt-12 lg:mt-0">
-                <img src="{% static 'images/office-meeting.png' %}" alt="Office meeting" class="w-full rounded-lg shadow-xl">
+                <img src="{% static 'images/workerman.png' %}" alt="Office meeting" class="w-full rounded-lg">
             </div>
         </div>
     </div>
