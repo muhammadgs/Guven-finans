@@ -5,19 +5,19 @@ def home(request):
     stats = [
         {
             "count": "40+",
-            "label": "Biz kimik?"
+            "label": "xidmət sahəsi"  # DƏYİŞDİRİLDİ
         },
         {
             "count": "25+",
-            "label": "Təcrübəli komanda"
+            "label": "tamamlanmış layihə" # DƏYİŞDİRİLDİ
         },
         {
             "count": "41+",
-            "label": "Təcrübə"
+            "label": "partnyor şirkət" # DƏYİŞDİRİLDİ
         },
         {
             "count": "94+",
-            "label": "Müştəri məmnuniyyəti"
+            "label": "müştəri məmnuniyyəti" # DƏYİŞDİRİLDİ
         },
     ]
 
