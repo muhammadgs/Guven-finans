@@ -177,27 +177,83 @@ DƏYİŞİKLİK:
 {% comment %} NİYƏ BİZ? BÖLMƏSİNİN SONU {% endcomment %}
 
 
+{% comment %}
+{% endcomment %}
 <section class="bg-white py-16 sm:py-24">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="text-center">
-            <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Mövcud xidmətlərimiz</h2>
+        <div class="mb-16">
+            <h2 class="text-3xl font-cal-sans tracking-tight text-gray-900 sm:text-4xl">Mövcud xidmətlərimiz:</h2>
         </div>
-        <div class="mt-16 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
-            {% for service in services %}
-            <div class="rounded-lg border border-gray-200 bg-gray-50 p-8 shadow-sm">
-                <div class="mb-4">
-                    <i class="fas fa-briefcase text-4xl text-blue-600"></i> </div>
-                <h3 class="text-2xl font-semibold text-gray-900">{{ service.title }}</h3>
-                <p class="mt-4 text-base text-gray-600">{{ service.description }}</p>
-                <a href="#" class="mt-6 inline-block font-semibold text-blue-600 hover:text-blue-500">
-                    Ətraflı...
-                </a>
+
+        {% comment %} Grid 2 sətirə bölündü. İlk sətir 3 sütunlu, ikinci sətir mərkəzləşdirilmiş 2 sütunlu. {% endcomment %}
+        <div class="space-y-10">
+            <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:items-stretch">
+
+                <div class="h-full rounded-lg border border-gray-200 bg-gray-50 p-8 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:bg-white">
+                    <h3 class="text-2xl font-cal-sans text-gray-900">Mühasibatlıq xidmətləri</h3>
+                    <ul class="mt-4 space-y-2 list-disc pl-5 text-base text-gray-600">
+                        <li>Mühasibatlığın qurulması və idarə edilməsi, mühasibatlıqda nəzarətsiz dövrün bərpası</li>
+                        <li>Müəssisələr üçün balansın hazırlanması və hesabatların verilməsi.</li>
+                        <li>Əmək haqqının hesablanması,</li>
+                    </ul>
+                    <a href="#" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        Ətraflı...
+                    </a>
+                </div>
+
+                <div class="h-full rounded-lg border border-gray-200 bg-gray-50 p-8 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:bg-white">
+                    <h3 class="text-2xl font-cal-sans text-gray-900">Vergi xidmətləri</h3>
+                    <ul class="mt-4 space-y-2 list-disc pl-5 text-base text-gray-600">
+                        <li>Hüquqi və fiziki şəxsin qeydiyyatı (VÖEN alınması), obyekt qeydiyyatının aparılması</li>
+                        <li>ƏDV qeydiyyatı və qeydiyyatın ləğvi.</li>
+                        <li>Bank rekvizitlərinin alınması</li>
+                        <li>Kassa aparatlarının qeydiyyatı</li>
+                    </ul>
+                    <a href="#" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        Ətraflı...
+                    </a>
+                </div>
+
+                <div class="h-full rounded-lg border border-gray-200 bg-gray-50 p-8 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:bg-white">
+                    <h3 class="text-2xl font-cal-sans text-gray-900">İnsan Resursları</h3>
+                    <ul class="mt-4 space-y-2 list-disc pl-5 text-base text-gray-600">
+                        <li>Kadr inzibatçılığı və sənədləşməsi sahəsində məlumat və məsləhət xidmətlərinin göstərilməsi</li>
+                        <li>Kadr inzibatçılığı sahəsində sənədlərin ekspertizası və rəylərin bildirilməsi</li>
+                    </ul>
+                    <a href="#" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        Ətraflı...
+                    </a>
+                </div>
             </div>
-            {% empty %}
-            <p class="text-center col-span-full">Xidmətlər tapılmadı.</p>
-            {% endfor %}
+
+            <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:mx-auto lg:max-w-4xl lg:grid-cols-2 lg:items-stretch">
+                <div class="h-full rounded-lg border border-gray-200 bg-gray-50 p-8 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:bg-white">
+                    <h3 class="text-2xl font-cal-sans text-gray-900">Hüquqi xidmətlərin təsviri</h3>
+                    <ul class="mt-4 space-y-2 list-disc pl-5 text-base text-gray-600">
+                        <li>Şirkətin səhmdarlarının ümumi yığıncaq iclaslarında (il ərzində ən az bir dəfə keçirilir) və Şirkətin Müşahidə Şurasının iclaslarında (il ərzində ən az dörd dəfə keçirilir) iştirak etmək, iştirakçıların iclas gedişində..</li>
+                    </ul>
+                    <a href="#" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        Ətraflı...
+                    </a>
+                </div>
+
+                <div class="h-full rounded-lg border border-gray-200 bg-gray-50 p-8 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:bg-white">
+                    <h3 class="text-2xl font-cal-sans text-gray-900">İKT</h3>
+                    <ul class="mt-4 space-y-2 list-disc pl-5 text-base text-gray-600">
+                        <li>IT Texniki dəstək (Help desk) xidmətinin göstərilməsi.</li>
+                        <li>Şirkət daxili internet şəbəkə sisteminin çəkilişi və qurulması.</li>
+                        <li>Şirkət daxili analoq telefon sisteminin çəkilişi.</li>
+                    </ul>
+                    <a href="#" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        Ətraflı...
+                    </a>
+                </div>
+            </div>
         </div>
+
     </div>
 </section>
+{% comment %}
+{% endcomment %}
 
 {% endblock %}

@@ -112,9 +112,11 @@
                     <i class="fas fa-phone-alt"></i> (+994) 51 321 0989
                 </a>
             </div>
+
+            {% comment %} HEADER SOSİAL İKONLARI - YENİLƏNDİ {% endcomment %}
             <div class="flex items-center gap-3 pr-12">
                 <a href="#" class="social-icon flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200">
-                    <i class="fab fa-google"></i>
+                    <i class="fab fa-whatsapp"></i>
                 </a>
                 <a href="#" class="social-icon flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200">
                     <i class="fab fa-instagram"></i>
@@ -164,58 +166,91 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="border-t bg-gray-900 text-gray-400">
-        <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 gap-12">
-                <div class="lg:col-span-2">
-                    <a href="/" class="flex items-center gap-2">
-                        <img src="{% static 'images/logo-footer.png' %}" alt="Güvən Finans" class="h-10 w-auto">
-                        <span class="text-2xl font-bold text-white">Güvən Finans</span>
+
+    {% comment %}
+    {% endcomment %}
+    <footer class="text-gray-300" style="background-image: linear-gradient(to bottom, #0E3EA4, #0B1B43);">
+        <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+                <div>
+                    <a href="/">
+                        <img src="{% static 'images/logo.png' %}" alt="Güvən Finans" class="h-20 w-auto">
+                        <h3 class="mt-2 text-2xl font-bold text-white">Güvən Finans</h3>
+                        <p class="text-sm text-gray-400">Uğurlar Güvənlə Başlar</p>
                     </a>
-                    <div class="mt-6 flex items-center gap-5">
-                        <a href="#" class="hover:text-white"><i class="fab fa-facebook-f text-xl"></i></a>
-                        <a href="#" class="hover:text-white"><i class="fab fa-instagram text-xl"></i></a>
-                        <a href="#" class="hover:text-white"><i class="fab fa-linkedin-in text-xl"></i></a>
+
+                    {% comment %} FOOTER SOSİAL İKONLARI - YENİLƏNDİ {% endcomment %}
+                    <div class="mt-4 flex items-center gap-3">
+                        <a href="#" class="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition hover:bg-white hover:text-blue-800">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                        <a href="#" class="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition hover:bg-white hover:text-blue-800">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition hover:bg-white hover:text-blue-800">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition hover:bg-white hover:text-blue-800">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
                     </div>
                 </div>
 
                 <div>
                     <h3 class="text-lg font-semibold text-white">Əlaqə</h3>
-                    <ul class="mt-4 space-y-3">
-                        <li><a href="mailto:info@guvenfinans.az" class="hover:text-white"><i class="fas fa-envelope mr-2 w-4"></i>info@guvenfinans.az</a></li>
-                        <li><a href="tel:+994513212189" class="hover:text-white"><i class="fas fa-phone-alt mr-2 w-4"></i>(+994) 51 321 21 89</a></li>
-                        <li><span class="flex"><i class="fas fa-map-marker-alt mr-2 w-4 mt-1"></i>Əhməd Rəcəbli 33, Era Business Center, Azərbaycan/Bakı</span></li>
+                    <ul class="mt-3 space-y-2">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-envelope mt-1.5 h-4 w-4 flex-shrink-0"></i>
+                            <a href="mailto:info@guvenfinans.az" class="hover:text-white">info@guvenfinans.az</a>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-phone-alt mt-1.5 h-4 w-4 flex-shrink-0"></i>
+                            <a href="tel:+994513210989" class="hover:text-white">(+994) 51 321 0989</a>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt mt-1.5 h-4 w-4 flex-shrink-0"></i>
+                            <span>Əhməd Rəcəbli 33, Esra Plaza, B bloku, 4-cü mərtəbə Azərbaycan/Bakı</span>
+                        </li>
                     </ul>
                 </div>
 
                 <div>
-                    <h3 class="text-lg font-semibold text-white">Xidmətlər</h3>
-                    <ul class="mt-4 space-y-3">
+                    <h3 class="text-lg font-semibold text-white">Xidmətlərimiz</h3>
+                    <ul class="mt-3 space-y-2">
                         <li><a href="#" class="hover:text-white">Proqram təminatı xidməti</a></li>
                         <li><a href="#" class="hover:text-white">Mühasibatlıq xidməti</a></li>
+                        <li><a href="#" class="hover:text-white">Hüquq xidməti</a></li>
                         <li><a href="#" class="hover:text-white">Vergi xidməti</a></li>
-                        <li><a href="#" class="hover:text-white">Hüquqi xidmət xidməti</a></li>
+                        <li><a href="#" class="hover:text-white">İnsan resursları xidməti</a></li>
                     </ul>
                 </div>
 
                 <div>
                     <h3 class="text-lg font-semibold text-white">Səhifələr</h3>
-                    <ul class="mt-4 space-y-3">
+                    <ul class="mt-3 space-y-2">
                         <li><a href="#" class="hover:text-white">Ana səhifə</a></li>
+                        <li><a href="#" class="hover:text-white">Konsultasiya</a></li>
+                        <li><a href="#" class="hover:text-white">Partnyorlarımız</a></li>
+                        <li><a href="#" class_AV="hover:text-white">Əməkdaşlarımız</a></li>
                         <li><a href="#" class="hover:text-white">Haqqımızda</a></li>
-                        <li><a href="#" class="hover:text-white">Əməkdaşlarımız</a></li>
-                        <li><a href="#" class="hover:text-white">Bloq</a></li>
+                        <li><a href="#" class="hover:text-white">Yazlar</a></li>
                         <li><a href="#" class="hover:text-white">Xidmətlər</a></li>
-                        <li><a href="#" class="hover:text-white">Əlaqə</a></li>
+                        <li><a href="#" class="hover:text-white">Komanda</a></li>
+                        <li><a href="#" class.hover:text-white">Niyə biz?</a></li>
                         <li><a href="#" class="hover:text-white">Göstəricilərimiz</a></li>
                     </ul>
                 </div>
             </div>
-            <div class="mt-12 border-t border-gray-700 pt-8 text-center">
-                <p>&copy; {% now "Y" %} Bütün Hüquqları Güvən Finans tərəfindən qorunur.</p>
+
+            <div class="mt-8 border-t border-gray-700 pt-6 text-center">
+                <p>Copyright &copy; 2023 Bütün Hüquqları Güvən Finans tərəfindən qorunur.</p>
             </div>
         </div>
     </footer>
+    {% comment %}
+    {% endcomment %}
+
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {

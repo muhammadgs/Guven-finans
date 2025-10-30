@@ -25,7 +25,12 @@ SECRET_KEY = 'django-insecure-v_bl@q78a)qn03=tr4x%rz+sbjg8w8fvgvdk3gu3uur119ssdr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'guvenfinans.az',       # Sizin əsas domeniniz
+    'www.guvenfinans.az',   # www ilə olan versiyası
+    'localhost',            # Lokal testlər üçün
+    '127.0.0.1',            # Lokal testlər üçün
+]
 
 
 # Application definition
