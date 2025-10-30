@@ -101,7 +101,7 @@
 <body class="bg-white text-gray-900 antialiased font-poppins-light">
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
 
-    <header id="main-header" class="fixed top-0 z-40 w-full transition-all duration-300 text-white">
+    <header id="main-header" class="fixed top-0 z-40 w-full transition-all duration-300 text-white {% block header_extra_classes %}{% endblock %}">
 
         <div class="flex items-center justify-between py-3 px-4 sm:px-6 lg:px-8">
             <div class="flex items-center gap-6 text-sm font-poppins-light pl-12">
@@ -114,22 +114,23 @@
             </div>
 
             {% comment %} HEADER SOSİAL İKONLARI - YENİLƏNDİ {% endcomment %}
-            <div class="flex items-center gap-3 pr-12">
+            <div class="hidden md:flex items-center gap-3 pr-12">
                 <a href="#" class="social-icon flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200">
-                    <i class="fab fa-whatsapp"></i>
+                    <i class="fa-brands fa-whatsapp"></i>
                 </a>
                 <a href="#" class="social-icon flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200">
-                    <i class="fab fa-instagram"></i>
+                    <i class="fa-brands fa-instagram"></i>
                 </a>
                 <a href="#" class="social-icon flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200">
-                    <i class="fab fa-facebook-f"></i>
+                    <i class="fa-brands fa-facebook-f"></i>
                 </a>
                 <a href="#" class="social-icon flex h-8 w-8 items-center justify-center rounded-full border transition-colors duration-200">
-                    <i class="fab fa-linkedin-in"></i>
+                    <i class="fa-brands fa-linkedin-in"></i>
                 </a>
             </div>
         </div>
 
+        {% block main_nav %}
         <hr id="header-divider" class="transition-colors duration-300" />
 
         <nav class="flex items-center justify-between px-4 py-4 sm:px-6 lg:px-8" aria-label="Primary">
@@ -160,6 +161,7 @@
                 </a>
             </div>
         </nav>
+        {% endblock main_nav %}
     </header>
 
     <main id="main">
@@ -182,17 +184,20 @@
 
                     {% comment %} FOOTER SOSİAL İKONLARI - YENİLƏNDİ {% endcomment %}
                     <div class="mt-4 flex items-center gap-3">
-                        <a href="#" class="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition hover:bg-white hover:text-blue-800">
-                            <i class="fab fa-whatsapp"></i>
+                        <a href="#" class="flex h-10 w-10 items-center justify-center rounded-lg border border-white text-gray-300 transition hover:bg-white hover:text-blue-800">
+                            <i class="fa-brands fa-whatsapp"></i>
                         </a>
-                        <a href="#" class="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition hover:bg-white hover:text-blue-800">
-                            <i class="fab fa-instagram"></i>
+
+                        <a href="#" class="flex h-10 w-10 items-center justify-center rounded-lg border border-white text-gray-300 transition hover:bg-white hover:text-blue-800">
+                            <i class="fa-brands fa-instagram"></i>
                         </a>
-                        <a href="#" class="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition hover:bg-white hover:text-blue-800">
-                            <i class="fab fa-facebook-f"></i>
+
+                        <a href="#" class="flex h-10 w-10 items-center justify-center rounded-lg border border-white text-gray-300 transition hover:bg-white hover:text-blue-800">
+                            <i class="fa-brands fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="flex h-10 w-10 items-center justify-center rounded border border-gray-600 text-gray-300 transition hover:bg-white hover:text-blue-800">
-                            <i class="fab fa-linkedin-in"></i>
+
+                        <a href="#" class="flex h-10 w-10 items-center justify-center rounded-lg border border-white text-gray-300 transition hover:bg-white hover:text-blue-800">
+                            <i class="fa-brands fa-linkedin-in"></i>
                         </a>
                     </div>
                 </div>
@@ -237,7 +242,7 @@
                         <li><a href="#" class="hover:text-white">Yazlar</a></li>
                         <li><a href="#" class="hover:text-white">Xidmətlər</a></li>
                         <li><a href="#" class="hover:text-white">Komanda</a></li>
-                        <li><a href="#" class.hover:text-white">Niyə biz?</a></li>
+                        <li><a href="#" class="hover:text-white">Niyə biz?</a></li>
                         <li><a href="#" class="hover:text-white">Göstəricilərimiz</a></li>
                     </ul>
                 </div>
@@ -274,7 +279,10 @@
                         header.classList.add('bg-white', 'shadow-md', 'header-scrolled');
                     } else {
                         // Remove scrolled styles (at top)
-                        header.classList.remove('bg-white', 'shadow-md', 'header-scrolled');
+                        // YALNIZ o səhifələrdə silin ki, "no-scroll-effect" sinfi YOXDUR
+                        if (!header.classList.contains('no-scroll-effect')) {
+                            header.classList.remove('bg-white', 'shadow-md', 'header-scrolled');
+                        }
                     }
                 }
                 lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;

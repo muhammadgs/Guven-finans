@@ -4,22 +4,99 @@ from django import forms
 
 from .models import OwnerRegistration
 
-PHONE_PATTERN = re.compile(r"^[0-9+\-\s]+$")
+# Yalnız rəqəm və boşluqları yoxlamaq üçün yeni RE
+NUMBER_PATTERN = re.compile(r"^[0-9\s]+$")
+
+# Ölkə kodları (genişləndirilə bilər)
+COUNTRY_CODES = [
+    ("", "Seçin..."),
+    ("+994", "+994 (AZ)"),
+    ("+90", "+90 (TR)"),
+    ("+7", "+7 (RU/KZ)"),
+    ("+1", "+1 (US/CA)"),
+    ("+44", "+44 (UK)"),
+    ("+49", "+49 (DE)"),
+    ("+33", "+33 (FR)"),
+    ("+39", "+39 (IT)"),
+    ("+34", "+34 (ES)"),
+    ("+48", "+48 (PL)"),
+    ("+380", "+380 (UA)"),
+    ("+995", "+995 (GE)"),
+    ("+375", "+375 (BY)"),
+    ("+98", "+98 (IR)"),
+    ("+971", "+971 (AE)"),
+    ("+86", "+86 (CN)"),
+    ("+91", "+91 (IN)"),
+    ("+81", "+81 (JP)"),
+    ("+82", "+82 (KR)"),
+    ("+31", "+31 (NL)"),
+    ("+55", "+55 (BR)"),
+    ("+61", "+61 (AU)"),
+]
 
 
 class OwnerRegistrationForm(forms.ModelForm):
+    # Yeni sahələri (prefix və number) əlavə edirik
+    phone_prefix = forms.ChoiceField(
+        choices=COUNTRY_CODES,
+        required=True,
+        label="Ölkə kodu",
+        widget=forms.Select(
+            attrs={
+                "class": "block w-full rounded-l-lg border border-gray-300 bg-gray-50 px-3 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+            }
+        ),
+    )
+    phone_number = forms.CharField(
+        required=True,
+        label="Mobil nömrə",
+        widget=forms.TextInput(
+            attrs={
+                "class": "mt-0 block w-full rounded-r-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "50 123 45 67 (yalnız rəqəm)",
+                "pattern": r"^[0-9\s]+$",
+                "inputmode": "numeric",
+            }
+        ),
+    )
+
+    company_phone_prefix = forms.ChoiceField(
+        choices=COUNTRY_CODES,
+        required=True,
+        label="Ölkə kodu",
+        widget=forms.Select(
+            attrs={
+                "class": "block w-full rounded-l-lg border border-gray-300 bg-gray-50 px-3 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+            }
+        ),
+    )
+    company_phone_number = forms.CharField(
+        required=True,
+        label="Şirkət nömrəsi",
+        widget=forms.TextInput(
+            attrs={
+                "class": "mt-0 block w-full rounded-r-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "12 123 45 67 (yalnız rəqəm)",
+                "pattern": r"^[0-9\s]+$",
+                "inputmode": "numeric",
+            }
+        ),
+    )
+
     class Meta:
         model = OwnerRegistration
+        # 'phone' və 'company_phone' sahələrini Meta.fields-dən çıxarırıq
         fields = [
             "first_name",
             "last_name",
-            "phone",
+            # "phone", # Çıxarıldı
             "email",
             "company_name",
             "company_email",
-            "company_phone",
+            # "company_phone", # Çıxarıldı
             "company_address",
         ]
+        # Vidcetləri yeni sahələrə uyğun yeniləyirik
         widgets = {
             "first_name": forms.TextInput(
                 attrs={
@@ -35,15 +112,6 @@ class OwnerRegistrationForm(forms.ModelForm):
                     "placeholder": "Soyadınızı daxil edin",
                     "required": True,
                     "minlength": 2,
-                }
-            ),
-            "phone": forms.TextInput(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "+994 XX XXX XX XX",
-                    "required": True,
-                    "pattern": r"^[0-9+\-\s]+$",
-                    "inputmode": "tel",
                 }
             ),
             "email": forms.EmailInput(
@@ -68,15 +136,6 @@ class OwnerRegistrationForm(forms.ModelForm):
                     "required": True,
                 }
             ),
-            "company_phone": forms.TextInput(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "Şirkət əlaqə nömrəsi",
-                    "required": True,
-                    "pattern": r"^[0-9+\-\s]+$",
-                    "inputmode": "tel",
-                }
-            ),
             "company_address": forms.Textarea(
                 attrs={
                     "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
@@ -87,6 +146,7 @@ class OwnerRegistrationForm(forms.ModelForm):
             ),
         }
 
+    # Ad sahələri üçün təmizləmə
     def _clean_name_field(self, field_name: str) -> str:
         value = self.cleaned_data.get(field_name, "").strip()
         if len(value) < 2:
@@ -102,32 +162,26 @@ class OwnerRegistrationForm(forms.ModelForm):
     def clean_company_name(self) -> str:
         return self._clean_name_field("company_name")
 
-    def _clean_phone_field(self, field_name: str) -> str:
+    # Nömrə sahələri üçün təmizləmə
+    def _clean_phone_number(self, field_name: str) -> str:
         value = self.cleaned_data.get(field_name, "").strip()
-        if not PHONE_PATTERN.fullmatch(value):
-            raise forms.ValidationError(
-                "Yalnız rəqəm, boşluq, + və - simvollarından istifadə edin."
-            )
+        if not value:
+            raise forms.ValidationError("Nömrə daxil edilməlidir.")
+        if not NUMBER_PATTERN.fullmatch(value):
+            raise forms.ValidationError("Yalnız rəqəm və boşluq daxil edin.")
 
         digits_only = re.sub(r"[^0-9]", "", value)
-        if not 9 <= len(digits_only) <= 15:
-            raise forms.ValidationError("Nömrə 9-15 rəqəm arasında olmalıdır.")
-
-        normalized = value.replace(' ', '').replace('-', '')
-        if normalized.startswith('+'):
-            if not normalized.startswith('+994'):
-                raise forms.ValidationError("Nömrə +994 və ya 0 ilə başlamalıdır.")
-        elif not normalized.startswith('0'):
-            raise forms.ValidationError("Nömrə +994 və ya 0 ilə başlamalıdır.")
-
+        if not 7 <= len(digits_only) <= 12:
+            raise forms.ValidationError("Nömrə 7-12 rəqəm arasında olmalıdır.")
         return value
 
-    def clean_phone(self) -> str:
-        return self._clean_phone_field("phone")
+    def clean_phone_number(self) -> str:
+        return self._clean_phone_number("phone_number")
 
-    def clean_company_phone(self) -> str:
-        return self._clean_phone_field("company_phone")
+    def clean_company_phone_number(self) -> str:
+        return self._clean_phone_number("company_phone_number")
 
+    # Email və ünvan təmizləmə
     def clean_email(self) -> str:
         value = self.cleaned_data.get("email", "").strip()
         if not value:
@@ -145,3 +199,29 @@ class OwnerRegistrationForm(forms.ModelForm):
         if not value:
             raise forms.ValidationError("Bu xana məcburidir.")
         return value
+
+    # Save metodunu override edirik ki, prefix və nömrəni birləşdirib bazaya yazaq
+    def save(self, commit=True):
+        # Əvvəlcə digər sahələri (ad, soyad...) instansa yazmaq üçün
+        instance = super().save(commit=False)
+
+        # Prefix və nömrəni təmizlənmiş datadan alırıq
+        phone_prefix = self.cleaned_data.get("phone_prefix")
+        phone_number = self.cleaned_data.get("phone_number", "").strip().replace(" ", "")
+
+        company_prefix = self.cleaned_data.get("company_phone_prefix")
+        company_number = (
+            self.cleaned_data.get("company_phone_number", "").strip().replace(" ", "")
+        )
+
+        # Birləşdirib modeldəki əsas sahələrə yazırıq
+        if phone_prefix and phone_number:
+            instance.phone = f"{phone_prefix}{phone_number}"
+
+        if company_prefix and company_number:
+            instance.company_phone = f"{company_prefix}{company_number}"
+
+        if commit:
+            instance.save()
+
+        return instance

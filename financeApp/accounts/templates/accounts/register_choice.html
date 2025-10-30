@@ -2,11 +2,16 @@
 
 {% block title %}Qeydiyyatdan keç | Güvən Finans{% endblock %}
 
+{% comment %} Headerə ağ fon/qara mətn əlavə edir və əsas naviqasiyanı gizlədir {% endcomment %}
+{% block header_extra_classes %}bg-white shadow-md header-scrolled no-scroll-effect{% endblock %}
+{% block main_nav %}{% endblock %}
+
 {% block content %}
+...
 <section class="relative isolate overflow-hidden bg-gradient-to-b from-blue-50 via-white to-white py-24 sm:py-32">
     <div class="mx-auto flex w-full max-w-5xl flex-col items-center px-4 text-center sm:px-6 lg:px-8">
         <div class="max-w-3xl">
-            <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">Qeydiyyatdan keç</h1>
+            <h1 class="text-4xl font-cal-sans tracking-tight text-gray-900 sm:text-5xl">Qeydiyyatdan keç</h1>
             <p class="mt-4 text-lg text-gray-600">
                 Zəhmət olmasa qeydiyyat növünüzü seçin
             </p>
@@ -17,7 +22,7 @@
                 <div class="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600">
                     <i class="fas fa-briefcase text-2xl"></i>
                 </div>
-                <h2 class="mt-6 text-2xl font-semibold text-gray-900">Sahibkar</h2>
+                <h2 class="mt-6 text-2xl font-cal-sans text-gray-900">Sahibkar</h2>
                 <p class="mt-3 text-base text-gray-600">
                     Biznesinizi Güvən Finans platformasında idarə etmək üçün qeydiyyatdan keçin.
                 </p>
@@ -27,7 +32,7 @@
                 <div class="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-blue-600">
                     <i class="fas fa-user-tie text-2xl"></i>
                 </div>
-                <h2 class="mt-6 text-2xl font-semibold text-gray-900">İşçi</h2>
+                <h2 class="mt-6 text-2xl font-cal-sans text-gray-900">İşçi</h2>
                 <p class="mt-3 text-base text-gray-600">
                     Komandamıza qoşulmaq üçün profilinizi yaradın və imkanları kəşf edin.
                 </p>
