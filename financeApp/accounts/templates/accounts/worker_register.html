@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}İşçi qeydiyyatı | Güvən Finans{% endblock %}
+
+{% block header_extra_classes %}bg-white shadow-md header-scrolled no-scroll-effect{% endblock %}
+{% block main_nav %}{% endblock %}
+
+{% block content %}
+<section class="bg-gray-50 py-16">
+    <div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <div class="mx-auto rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-100">
+            <div class="mb-8 text-center">
+                <h1 class="text-3xl font-cal-sans text-gray-900">İşçi qeydiyyatı</h1>
+                <p class="mt-2 text-base text-gray-600">Zəhmət olmasa məlumatlarınızı daxil edin.</p>
+            </div>
+
+            {% if messages %}
+                <div class="mb-6 space-y-3">
+                    {% for message in messages %}
+                        {% if "success" in message.tags %}
+                            <div class="rounded-lg border border-green-100 bg-green-50 px-4 py-3 text-sm text-green-700">
+                                {{ message }}
+                            </div>
+                        {% else %}
+                            <div class="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if form.non_field_errors %}
+                <div class="mb-6 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div>
+                        <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-cal-sans text-gray-700">Ad</label>
+                        {{ form.first_name }}
+                        {% if form.first_name.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.first_name.errors|join:" " }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-cal-sans text-gray-700">Soyad</label>
+                        {{ form.last_name }}
+                        {% if form.last_name.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.last_name.errors|join:" " }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <div class="md:col-span-1">
+                        <label for="{{ form.phone.id_for_label }}" class="block text-sm font-cal-sans text-gray-700">Telefon nömrəsi</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.phone.errors|join:" " }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="md:col-span-1">
+                        <label for="{{ form.email.id_for_label }}" class="block text-sm font-cal-sans text-gray-700">E-poçt</label>
+                        {{ form.email }}
+                        {% if form.email.errors %}
+                            <p class="mt-2 text-sm text-red-600">{{ form.email.errors|join:" " }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div>
+                    <label for="{{ form.position.id_for_label }}" class="block text-sm font-cal-sans text-gray-700">Vəzifə</label>
+                    {{ form.position }}
+                    {% if form.position.errors %}
+                        <p class="mt-2 text-sm text-red-600">{{ form.position.errors|join:" " }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="flex items-center justify-end">
+                    <button type="submit" class="inline-flex items-center justify-center rounded-[3.5rem] bg-blue-600 px-6 py-3 text-sm font-cal-sans text-white shadow-lg shadow-blue-200 transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        Göndər
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

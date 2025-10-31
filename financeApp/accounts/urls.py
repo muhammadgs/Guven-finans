@@ -12,4 +12,9 @@ urlpatterns = [
         name="owner-thanks",
     ),
     path("qeydiyyat/isci/", views.register_worker, name="register-worker"),
+    path(
+        "qeydiyyat/isci/tesekkurler/",
+        views.worker_thanks,
+        name="worker-thanks",
+    ),
 ]

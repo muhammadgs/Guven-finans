@@ -2,10 +2,11 @@ import re
 
 from django import forms
 
-from .models import OwnerRegistration
+from .models import OwnerRegistration, WorkerRegistration
 
 # Yalnız rəqəm və boşluqları yoxlamaq üçün yeni RE
 NUMBER_PATTERN = re.compile(r"^[0-9\s]+$")
+PHONE_ALLOWED_PATTERN = re.compile(r"^[0-9\s+\-]+$")
 
 # Ölkə kodları (genişləndirilə bilər)
 COUNTRY_CODES = [
@@ -225,3 +226,89 @@ class OwnerRegistrationForm(forms.ModelForm):
             instance.save()
 
         return instance
+
+
+class WorkerRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = WorkerRegistration
+        fields = ["first_name", "last_name", "phone", "email", "position"]
+        widgets = {
+            "first_name": forms.TextInput(
+                attrs={
+                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                    "placeholder": "Adınızı daxil edin",
+                    "required": True,
+                    "minlength": 2,
+                }
+            ),
+            "last_name": forms.TextInput(
+                attrs={
+                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                    "placeholder": "Soyadınızı daxil edin",
+                    "required": True,
+                    "minlength": 2,
+                }
+            ),
+            "phone": forms.TextInput(
+                attrs={
+                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                    "placeholder": "+994 50 123 45 67",
+                    "required": True,
+                    "pattern": r"^(?:\+994|0)[0-9\s\-]{7,13}$",
+                    "minlength": 9,
+                    "maxlength": 15,
+                }
+            ),
+            "email": forms.EmailInput(
+                attrs={
+                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                    "placeholder": "E-poçt ünvanınızı daxil edin",
+                    "required": True,
+                    "type": "email",
+                }
+            ),
+            "position": forms.TextInput(
+                attrs={
+                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                    "placeholder": "Vəzifənizi daxil edin",
+                    "required": True,
+                    "minlength": 2,
+                }
+            ),
+        }
+
+    def _clean_min_length(self, field_name: str) -> str:
+        value = self.cleaned_data.get(field_name, "").strip()
+        if len(value) < 2:
+            raise forms.ValidationError("Minimum 2 simvol daxil edilməlidir.")
+        return value
+
+    def clean_first_name(self) -> str:
+        return self._clean_min_length("first_name")
+
+    def clean_last_name(self) -> str:
+        return self._clean_min_length("last_name")
+
+    def clean_position(self) -> str:
+        return self._clean_min_length("position")
+
+    def clean_phone(self) -> str:
+        value = self.cleaned_data.get("phone", "").strip()
+        if not value:
+            raise forms.ValidationError("Telefon nömrəsi tələb olunur.")
+        if not PHONE_ALLOWED_PATTERN.fullmatch(value):
+            raise forms.ValidationError(
+                "Yalnız rəqəm, boşluq, '+' və '-' simvollarından istifadə edin."
+            )
+        if not (value.startswith("+994") or value.startswith("0")):
+            raise forms.ValidationError("Nömrə +994 və ya 0 ilə başlamalıdır.")
+        digits_only = re.sub(r"[^0-9]", "", value)
+        if not 9 <= len(digits_only) <= 15:
+            raise forms.ValidationError("Nömrə 9-15 rəqəm arasında olmalıdır.")
+        return value
+
+    def clean_email(self) -> str:
+        value = self.cleaned_data.get("email", "").strip()
+        if not value:
+            raise forms.ValidationError("E-poçt tələb olunur.")
+        return value
