@@ -5,7 +5,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from .forms import OwnerRegistrationForm
+from .forms import OwnerRegistrationForm, WorkerRegistrationForm
 from .models import OwnerRegistration
 
 
@@ -46,7 +46,26 @@ def register_choice(request: HttpRequest) -> HttpResponse:
 
 
 def register_worker(request: HttpRequest) -> HttpResponse:
-    return HttpResponse("İşçi qeydiyyat formu gələcək")
+    if request.method == "POST":
+        form = WorkerRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Məlumatlarınız uğurla göndərildi. Tezliklə sizinlə əlaqə saxlanılacaq.",
+            )
+            return redirect(reverse("worker-thanks"))
+        messages.error(request, "Zəhmət olmasa formdakı səhvləri düzəldin.")
+    else:
+        form = WorkerRegistrationForm()
+
+    return render(
+        request,
+        "accounts/worker_register.html",
+        {
+            "form": form,
+        },
+    )
 
 
 def register_owner(request: HttpRequest) -> HttpResponse:
@@ -71,3 +90,7 @@ def register_owner(request: HttpRequest) -> HttpResponse:
 
 def owner_thanks(request: HttpRequest) -> HttpResponse:
     return render(request, "accounts/owner_thanks.html")
+
+
+def worker_thanks(request: HttpRequest) -> HttpResponse:
+    return render(request, "accounts/worker_thanks.html")
