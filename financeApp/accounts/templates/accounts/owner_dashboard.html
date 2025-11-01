@@ -3,6 +3,8 @@
 
 {% block title %}Sahibkar Portalı | Güvən Finans{% endblock %}
 
+{% block header_extra_classes %}owner-dashboard-header{% endblock %}
+
 {% block main_nav %}
 <div class="flex flex-wrap items-center justify-between gap-6 px-4 py-4 sm:px-6 lg:px-12">
     <div class="flex items-center gap-4">
@@ -13,7 +15,7 @@
             <h1 class="portal-title font-cal-sans text-xl leading-tight transition-colors duration-300">Sahibkar portalı</h1>
         </div>
     </div>
-    <div class="flex items-center gap-4 text-gray-500">
+    <div class="flex items-center gap-4 text-gray-500 owner-header-contact">
         <div class="hidden lg:flex items-center gap-6 text-sm font-medium">
             <a href="mailto:info@guvenfinans.az" class="flex items-center gap-2 hover:text-blue-500 transition-colors">
                 <i class="fas fa-envelope"></i>
@@ -99,6 +101,27 @@
 
 #main-header.header-scrolled .portal-title {
     color: #111827; /* text-gray-900 */
+}
+
+#main-header.owner-dashboard-header {
+    background-color: #13213C;
+    color: #F9FAFB;
+}
+
+#main-header.owner-dashboard-header .owner-header-contact a {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+#main-header.owner-dashboard-header .owner-header-contact a:hover {
+    color: #93C5FD;
+}
+
+#main-header.owner-dashboard-header.header-scrolled {
+    color: #1F2937;
+}
+
+#main-header.owner-dashboard-header.header-scrolled .owner-header-contact a {
+    color: #6B7280;
 }
 
 .portal-icon-btn {
