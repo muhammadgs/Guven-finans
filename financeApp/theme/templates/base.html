@@ -153,13 +153,22 @@
             </div>
 
             <div class="flex-shrink-0 flex items-center gap-3 pr-12">
-                <a href="{% url 'register-choice' %}" id="register-btn" class="font-cal-sans hidden sm:inline-block rounded-full border px-5 py-2.5 text-sm transition-all duration-300">
-                    Qeydiyyatdan keç
-                </a>
-                <a href="#" id="login-btn" class="font-cal-sans hidden sm:inline-block rounded-full px-5 py-2.5 text-sm shadow-sm transition-all duration-300">
-                    Giriş et
-                </a>
-            </div>
+                    {% if user.is_authenticated %}
+                        <a href="#" id="dashboard-btn" class="font-cal-sans hidden sm:inline-block rounded-full border px-5 py-2.5 text-sm transition-all duration-300">
+                            Panelim
+                        </a>
+                        <a href="{% url 'logout' %}" id="logout-btn" class="font-cal-sans hidden sm:inline-block rounded-full bg-red-600 px-5 py-2.5 text-sm text-white shadow-sm transition-all duration-300 hover:bg-red-700">
+                            Çıxış
+                        </a>
+                    {% else %}
+                        <a href="{% url 'register-choice' %}" id="register-btn" class="font-cal-sans hidden sm:inline-block rounded-full border px-5 py-2.5 text-sm transition-all duration-300">
+                            Qeydiyyat
+                        </a>
+                        <a href="{% url 'login' %}" id="login-btn" class="font-cal-sans hidden sm:inline-block rounded-full bg-blue-600 px-5 py-2.5 text-sm text-white shadow-sm transition-all duration-300 hover:bg-blue-700">
+                            Giriş et
+                        </a>
+                    {% endif %}
+                </div>
         </nav>
         {% endblock main_nav %}
     </header>

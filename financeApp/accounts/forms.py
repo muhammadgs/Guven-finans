@@ -1,14 +1,12 @@
 import re
-
 from django import forms
-
+from django.db import transaction
+from django.contrib.auth.models import User
 from .models import OwnerRegistration, WorkerRegistration
 
-# Yalnız rəqəm və boşluqları yoxlamaq üçün yeni RE
+# Pattern-lər və Ölkə Kodları (Sizin kodunuz olduğu kimi qalır)
 NUMBER_PATTERN = re.compile(r"^[0-9\s]+$")
 PHONE_ALLOWED_PATTERN = re.compile(r"^[0-9\s+\-]+$")
-
-# Ölkə kodları (genişləndirilə bilər)
 COUNTRY_CODES = [
     ("", "Seçin..."),
     ("+994", "+994 (AZ)"),
@@ -36,118 +34,86 @@ COUNTRY_CODES = [
 ]
 
 
+# --- OwnerRegistrationForm DƏYİŞİKLİKLƏRİ ---
+
 class OwnerRegistrationForm(forms.ModelForm):
-    # Yeni sahələri (prefix və number) əlavə edirik
+    # Prefiks sahələri (olduğu kimi qalır)
     phone_prefix = forms.ChoiceField(
-        choices=COUNTRY_CODES,
-        required=True,
-        label="Ölkə kodu",
-        widget=forms.Select(
-            attrs={
-                "class": "block w-full rounded-l-lg border border-gray-300 bg-gray-50 px-3 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-            }
-        ),
+        choices=COUNTRY_CODES, required=True, label="Ölkə kodu",
+        widget=forms.Select(attrs={
+            "class": "block w-full rounded-l-lg border border-gray-300 bg-gray-50 px-3 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"})
     )
     phone_number = forms.CharField(
-        required=True,
-        label="Mobil nömrə",
-        widget=forms.TextInput(
-            attrs={
-                "class": "mt-0 block w-full rounded-r-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                "placeholder": "50 123 45 67 (yalnız rəqəm)",
-                "pattern": r"^[0-9\s]+$",
-                "inputmode": "numeric",
-            }
-        ),
+        required=True, label="Mobil nömrə",
+        widget=forms.TextInput(attrs={
+            "class": "mt-0 block w-full rounded-r-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+            "placeholder": "50 123 45 67 (yalnız rəqəm)", "pattern": r"^[0-9\s]+$", "inputmode": "numeric"})
     )
-
     company_phone_prefix = forms.ChoiceField(
-        choices=COUNTRY_CODES,
-        required=True,
-        label="Ölkə kodu",
-        widget=forms.Select(
-            attrs={
-                "class": "block w-full rounded-l-lg border border-gray-300 bg-gray-50 px-3 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-            }
-        ),
+        choices=COUNTRY_CODES, required=True, label="Ölkə kodu",
+        widget=forms.Select(attrs={
+            "class": "block w-full rounded-l-lg border border-gray-300 bg-gray-50 px-3 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"})
     )
     company_phone_number = forms.CharField(
+        required=True, label="Şirkət nömrəsi",
+        widget=forms.TextInput(attrs={
+            "class": "mt-0 block w-full rounded-r-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+            "placeholder": "12 123 45 67 (yalnız rəqəm)", "pattern": r"^[0-9\s]+$", "inputmode": "numeric"})
+    )
+
+    # === XƏTANIN SƏBƏBİ BU SAHƏLƏRİN OLMAYIŞIDIR ===
+    password = forms.CharField(
+        label="Şifrə",
         required=True,
-        label="Şirkət nömrəsi",
-        widget=forms.TextInput(
+        min_length=8,
+        widget=forms.PasswordInput(
             attrs={
-                "class": "mt-0 block w-full rounded-r-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                "placeholder": "12 123 45 67 (yalnız rəqəm)",
-                "pattern": r"^[0-9\s]+$",
-                "inputmode": "numeric",
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "Şifrənizi daxil edin (minimum 8 simvol)",
+            }
+        ),
+    )
+    password_confirm = forms.CharField(
+        label="Şifrə təkrarı",
+        required=True,
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "Şifrənizi təkrar daxil edin",
             }
         ),
     )
 
     class Meta:
         model = OwnerRegistration
-        # 'phone' və 'company_phone' sahələrini Meta.fields-dən çıxarırıq
+        # 'password' buradan silinməlidir, çünki yuxarıda təyin etdik
         fields = [
-            "first_name",
-            "last_name",
-            # "phone", # Çıxarıldı
-            "email",
-            "company_name",
-            "company_email",
-            # "company_phone", # Çıxarıldı
-            "company_address",
+            "first_name", "last_name", "email",
+            "company_name", "company_email", "company_address",
         ]
-        # Vidcetləri yeni sahələrə uyğun yeniləyirik
+        # Widget-lər (sizin kodunuzdakı kimi qalır)
         widgets = {
-            "first_name": forms.TextInput(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "Adınızı daxil edin",
-                    "required": True,
-                    "minlength": 2,
-                }
-            ),
-            "last_name": forms.TextInput(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "Soyadınızı daxil edin",
-                    "required": True,
-                    "minlength": 2,
-                }
-            ),
-            "email": forms.EmailInput(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "E-poçt ünvanınızı daxil edin",
-                    "required": True,
-                }
-            ),
-            "company_name": forms.TextInput(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "Şirkət adını daxil edin",
-                    "required": True,
-                    "minlength": 2,
-                }
-            ),
-            "company_email": forms.EmailInput(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "Şirkət e-poçtunu daxil edin",
-                    "required": True,
-                }
-            ),
-            "company_address": forms.Textarea(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "Şirkət ünvanını daxil edin",
-                    "rows": 4,
-                    "required": True,
-                }
-            ),
+            "first_name": forms.TextInput(attrs={
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "Adınızı daxil edin", "required": True, "minlength": 2}),
+            "last_name": forms.TextInput(attrs={
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "Soyadınızı daxil edin", "required": True, "minlength": 2}),
+            "email": forms.EmailInput(attrs={
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "E-poçt ünvanınızı daxil edin", "required": True}),
+            "company_name": forms.TextInput(attrs={
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "Şirkət adını daxil edin", "required": True, "minlength": 2}),
+            "company_email": forms.EmailInput(attrs={
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "Şirkət e-poçtunu daxil edin", "required": True}),
+            "company_address": forms.Textarea(attrs={
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "Şirkət ünvanını daxil edin", "rows": 4, "required": True}),
         }
 
-    # Ad sahələri üçün təmizləmə
+    # Sizin clean metodlarınız (olduğu kimi qalır)
     def _clean_name_field(self, field_name: str) -> str:
         value = self.cleaned_data.get(field_name, "").strip()
         if len(value) < 2:
@@ -163,17 +129,12 @@ class OwnerRegistrationForm(forms.ModelForm):
     def clean_company_name(self) -> str:
         return self._clean_name_field("company_name")
 
-    # Nömrə sahələri üçün təmizləmə
     def _clean_phone_number(self, field_name: str) -> str:
         value = self.cleaned_data.get(field_name, "").strip()
-        if not value:
-            raise forms.ValidationError("Nömrə daxil edilməlidir.")
-        if not NUMBER_PATTERN.fullmatch(value):
-            raise forms.ValidationError("Yalnız rəqəm və boşluq daxil edin.")
-
+        if not value: raise forms.ValidationError("Nömrə daxil edilməlidir.")
+        if not NUMBER_PATTERN.fullmatch(value): raise forms.ValidationError("Yalnız rəqəm və boşluq daxil edin.")
         digits_only = re.sub(r"[^0-9]", "", value)
-        if not 7 <= len(digits_only) <= 12:
-            raise forms.ValidationError("Nömrə 7-12 rəqəm arasında olmalıdır.")
+        if not 7 <= len(digits_only) <= 12: raise forms.ValidationError("Nömrə 7-12 rəqəm arasında olmalıdır.")
         return value
 
     def clean_phone_number(self) -> str:
@@ -182,105 +143,120 @@ class OwnerRegistrationForm(forms.ModelForm):
     def clean_company_phone_number(self) -> str:
         return self._clean_phone_number("company_phone_number")
 
-    # Email və ünvan təmizləmə
     def clean_email(self) -> str:
-        value = self.cleaned_data.get("email", "").strip()
-        if not value:
-            raise forms.ValidationError("Bu xana məcburidir.")
+        value = self.cleaned_data.get("email", "").strip().lower()
+        if not value: raise forms.ValidationError("Bu xana məcburidir.")
+        if User.objects.filter(email=value).exists() or OwnerRegistration.objects.filter(email=value).exists():
+            raise forms.ValidationError("Bu e-poçt artıq istifadə olunub.")
         return value
 
     def clean_company_email(self) -> str:
-        value = self.cleaned_data.get("company_email", "").strip()
-        if not value:
-            raise forms.ValidationError("Bu xana məcburidir.")
+        value = self.cleaned_data.get("company_email", "").strip().lower()
+        if not value: raise forms.ValidationError("Bu xana məcburidir.")
+        if OwnerRegistration.objects.filter(company_email=value).exists():
+            raise forms.ValidationError("Bu şirkət e-poçtu artıq istifadə olunub.")
         return value
 
     def clean_company_address(self) -> str:
         value = self.cleaned_data.get("company_address", "").strip()
-        if not value:
-            raise forms.ValidationError("Bu xana məcburidir.")
+        if not value: raise forms.ValidationError("Bu xana məcburidir.")
         return value
 
-    # Save metodunu override edirik ki, prefix və nömrəni birləşdirib bazaya yazaq
+    # ŞİFRƏ TƏSDİQİ ƏLAVƏ EDİLDİ
+    def clean_password_confirm(self):
+        # .get() istifadə edirik ki, KeyError alsaq belə, proqram dayanmasın
+        password = self.cleaned_data.get("password")
+        password_confirm = self.cleaned_data.get("password_confirm")
+
+        # Əgər 'password' sahəsi yoxdursa (formda təyin edilməyibsə), .get() None qaytaracaq
+        if not password:
+            raise forms.ValidationError("Formda 'password' sahəsi təyin edilməyib. (Sistem xətası)")
+
+        if password and password_confirm and password != password_confirm:
+            raise forms.ValidationError("Şifrələr üst-üstə düşmür.")
+        return password_confirm
+
+    # === DÜZGÜN SAVE METODU BUDUR ===
+    @transaction.atomic
     def save(self, commit=True):
-        # Əvvəlcə digər sahələri (ad, soyad...) instansa yazmaq üçün
-        instance = super().save(commit=False)
+        # 1. Django User Obyektini yarat
+        # Xətanın qarşısını almaq üçün .get() istifadə edirik
+        email = self.cleaned_data.get("email")
+        password = self.cleaned_data.get("password")
 
-        # Prefix və nömrəni təmizlənmiş datadan alırıq
-        phone_prefix = self.cleaned_data.get("phone_prefix")
-        phone_number = self.cleaned_data.get("phone_number", "").strip().replace(" ", "")
-
-        company_prefix = self.cleaned_data.get("company_phone_prefix")
-        company_number = (
-            self.cleaned_data.get("company_phone_number", "").strip().replace(" ", "")
+        # User modelində 'username' məcburidir, biz email-i həm username, həm email kimi istifadə edirik.
+        user = User.objects.create_user(
+            username=email,
+            email=email,
+            password=password,
+            first_name=self.cleaned_data.get("first_name"),
+            last_name=self.cleaned_data.get("last_name")
         )
 
-        # Birləşdirib modeldəki əsas sahələrə yazırıq
-        if phone_prefix and phone_number:
-            instance.phone = f"{phone_prefix}{phone_number}"
+        # 2. OwnerRegistration (Profil) Obyektini yarat
+        instance = super().save(commit=False)
+        instance.user = user  # Yaratdığımız User-i bura bağlayırıq
+        instance.email = email
 
-        if company_prefix and company_number:
-            instance.company_phone = f"{company_prefix}{company_number}"
+        # Prefiks və nömrələri birləşdir (sizin kodunuz)
+        phone_prefix = self.cleaned_data.get("phone_prefix")
+        phone_number = self.cleaned_data.get("phone_number", "").strip().replace(" ", "")
+        company_prefix = self.cleaned_data.get("company_phone_prefix")
+        company_number = self.cleaned_data.get("company_phone_number", "").strip().replace(" ", "")
+
+        if phone_prefix and phone_number: instance.phone = f"{phone_prefix}{phone_number}"
+        if company_prefix and company_number: instance.company_phone = f"{company_prefix}{company_number}"
 
         if commit:
-            instance.save()
+            instance.save()  # OwnerRegistration obyektini bazaya yaz
 
         return instance
 
 
+# --- WorkerRegistrationForm DƏYİŞİKLİKLƏRİ ---
+
 class WorkerRegistrationForm(forms.ModelForm):
+    # ŞİFRƏ SAHƏLƏRİ ƏLAVƏ EDİLDİ
+    password = forms.CharField(
+        label="Şifrə", required=True, min_length=8,
+        widget=forms.PasswordInput(attrs={
+            "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+            "placeholder": "Şifrənizi daxil edin (minimum 8 simvol)"})
+    )
+    password_confirm = forms.CharField(
+        label="Şifrə təkrarı", required=True,
+        widget=forms.PasswordInput(attrs={
+            "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+            "placeholder": "Şifrənizi təkrar daxil edin"})
+    )
+
     class Meta:
         model = WorkerRegistration
         fields = ["first_name", "last_name", "phone", "email", "position"]
+        # Widget-lər (sizin kodunuzdakı kimi qalır)
         widgets = {
-            "first_name": forms.TextInput(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "Adınızı daxil edin",
-                    "required": True,
-                    "minlength": 2,
-                }
-            ),
-            "last_name": forms.TextInput(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "Soyadınızı daxil edin",
-                    "required": True,
-                    "minlength": 2,
-                }
-            ),
-            "phone": forms.TextInput(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "+994 50 123 45 67",
-                    "required": True,
-                    "pattern": r"^(?:\+994|0)[0-9\s\-]{7,13}$",
-                    "minlength": 9,
-                    "maxlength": 15,
-                }
-            ),
-            "email": forms.EmailInput(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "E-poçt ünvanınızı daxil edin",
-                    "required": True,
-                    "type": "email",
-                }
-            ),
-            "position": forms.TextInput(
-                attrs={
-                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
-                    "placeholder": "Vəzifənizi daxil edin",
-                    "required": True,
-                    "minlength": 2,
-                }
-            ),
+            "first_name": forms.TextInput(attrs={
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "Adınızı daxil edin", "required": True, "minlength": 2}),
+            "last_name": forms.TextInput(attrs={
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "Soyadınızı daxil edin", "required": True, "minlength": 2}),
+            "phone": forms.TextInput(attrs={
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "+994 50 123 45 67", "required": True, "pattern": r"^(?:\+994|0)[0-9\s\-]{7,13}$",
+                "minlength": 9, "maxlength": 15}),
+            "email": forms.EmailInput(attrs={
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "E-poçt ünvanınızı daxil edin", "required": True, "type": "email"}),
+            "position": forms.TextInput(attrs={
+                "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "placeholder": "Vəzifənizi daxil edin", "required": True, "minlength": 2}),
         }
 
+    # Sizin clean metodlarınız (olduğu kimi qalır)
     def _clean_min_length(self, field_name: str) -> str:
         value = self.cleaned_data.get(field_name, "").strip()
-        if len(value) < 2:
-            raise forms.ValidationError("Minimum 2 simvol daxil edilməlidir.")
+        if len(value) < 2: raise forms.ValidationError("Minimum 2 simvol daxil edilməlidir.")
         return value
 
     def clean_first_name(self) -> str:
@@ -294,21 +270,51 @@ class WorkerRegistrationForm(forms.ModelForm):
 
     def clean_phone(self) -> str:
         value = self.cleaned_data.get("phone", "").strip()
-        if not value:
-            raise forms.ValidationError("Telefon nömrəsi tələb olunur.")
-        if not PHONE_ALLOWED_PATTERN.fullmatch(value):
-            raise forms.ValidationError(
-                "Yalnız rəqəm, boşluq, '+' və '-' simvollarından istifadə edin."
-            )
-        if not (value.startswith("+994") or value.startswith("0")):
-            raise forms.ValidationError("Nömrə +994 və ya 0 ilə başlamalıdır.")
+        if not value: raise forms.ValidationError("Telefon nömrəsi tələb olunur.")
+        if not PHONE_ALLOWED_PATTERN.fullmatch(value): raise forms.ValidationError(
+            "Yalnız rəqəm, boşluq, '+' və '-' simvollarından istifadə edin.")
+        if not (value.startswith("+994") or value.startswith("0")): raise forms.ValidationError(
+            "Nömrə +994 və ya 0 ilə başlamalıdır.")
         digits_only = re.sub(r"[^0-9]", "", value)
-        if not 9 <= len(digits_only) <= 15:
-            raise forms.ValidationError("Nömrə 9-15 rəqəm arasında olmalıdır.")
+        if not 9 <= len(digits_only) <= 15: raise forms.ValidationError("Nömrə 9-15 rəqəm arasında olmalıdır.")
         return value
 
     def clean_email(self) -> str:
-        value = self.cleaned_data.get("email", "").strip()
-        if not value:
-            raise forms.ValidationError("E-poçt tələb olunur.")
+        value = self.cleaned_data.get("email", "").strip().lower()
+        if not value: raise forms.ValidationError("E-poçt tələb olunur.")
+        if User.objects.filter(email=value).exists() or WorkerRegistration.objects.filter(email=value).exists():
+            raise forms.ValidationError("Bu e-poçt artıq istifadə olunub.")
         return value
+
+    # ŞİFRƏ TƏSDİQİ ƏLAVƏ EDİLDİ
+    def clean_password_confirm(self):
+        password = self.cleaned_data.get("password")
+        password_confirm = self.cleaned_data.get("password_confirm")
+        if not password:
+            raise forms.ValidationError("Formda 'password' sahəsi təyin edilməyib. (Sistem xətası)")
+        if password and password_confirm and password != password_confirm:
+            raise forms.ValidationError("Şifrələr üst-üstə düşmür.")
+        return password_confirm
+
+    # SAVE METODU TAMAMİLƏ YENİLƏNDİ
+    @transaction.atomic
+    def save(self, commit=True):
+        email = self.cleaned_data.get("email")
+        password = self.cleaned_data.get("password")
+
+        user = User.objects.create_user(
+            username=email,
+            email=email,
+            password=password,
+            first_name=self.cleaned_data.get("first_name"),
+            last_name=self.cleaned_data.get("last_name")
+        )
+
+        instance = super().save(commit=False)
+        instance.user = user
+        instance.email = email
+
+        if commit:
+            instance.save()
+
+        return instance

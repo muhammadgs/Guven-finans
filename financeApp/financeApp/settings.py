@@ -135,7 +135,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 TAILWIND_APP_NAME = "theme"
 NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
-AUTH_USER_MODEL = "accounts.User"
+
 
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"

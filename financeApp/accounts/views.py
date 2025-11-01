@@ -1,3 +1,6 @@
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm # Django-nun hazır login forması
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import BadHeaderError, send_mail
@@ -94,3 +97,66 @@ def owner_thanks(request: HttpRequest) -> HttpResponse:
 
 def worker_thanks(request: HttpRequest) -> HttpResponse:
     return render(request, "accounts/worker_thanks.html")
+
+
+def login_view(request: HttpRequest) -> HttpResponse:
+    """
+    İstifadəçi giriş səhifəsi (Sahibkar və İşçi üçün ortaq)
+    """
+    if request.user.is_authenticated:
+        # Əgər artıq daxil olubsa, birbaşa dashboard-a yönləndir
+        # HƏLƏLİK dashboard səhifəmiz yoxdur, ona görə ana səhifəyə yönləndiririk
+        # return redirect('owner_dashboard') # Gələcəkdə belə olacaq
+        return redirect('/')  # Hələlik ana səhifəyə
+
+    if request.method == "POST":
+        # Django-nun daxili AuthenticationForm-u istifadə edirik.
+        # Bu forma "username" (biz email istifadə edirik) və "password" sahələrini yoxlayır.
+        form = AuthenticationForm(request, data=request.POST)
+
+        if form.is_valid():
+            # Məlumatlar düzgündürsə...
+            username = form.cleaned_data.get('username')  # Bu, bizim 'email' sahəmizdir
+            password = form.cleaned_data.get('password')
+
+            # İstifadəçini yoxla
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                # İstifadəçi varsa və şifrə düzdürsə, sessiyaya daxil et
+                login(request, user)
+
+                # TODO: İstifadəçinin Sahibkar yoxsa İşçi olduğunu yoxlayıb
+                # müvafiq panelə yönləndirmək lazımdır.
+                # Hələlik ana səhifəyə yönləndiririk.
+                messages.success(request, f"Xoş gəldiniz, {user.first_name}!")
+
+                # GƏLƏCƏKDƏ:
+                # try:
+                #    if request.user.ownerregistration:
+                #        return redirect('owner_dashboard')
+                # except:
+                #    pass # və ya worker_dashboard-a yönləndir
+
+                return redirect('/')
+            else:
+                # İstifadəçi yoxdursa və ya şifrə səhvdirsə
+                messages.error(request, "E-poçt və ya şifrə yanlışdır.")
+        else:
+            # Form düzgün doldurulmayıbsa
+            messages.error(request, "E-poçt və ya şifrə yanlışdır.")
+
+    else:
+        # GET sorğusu olarsa, boş login forması göstər
+        form = AuthenticationForm()
+
+    return render(request, "accounts/login.html", {"form": form})
+
+
+def logout_view(request: HttpRequest) -> HttpResponse:
+    """
+    İstifadəçi çıxış funksiyası
+    """
+    logout(request)
+    messages.info(request, "Hesabınızdan uğurla çıxış etdiniz.")
+    return redirect('login')  # Çıxışdan sonra login səhifəsinə yönləndir
