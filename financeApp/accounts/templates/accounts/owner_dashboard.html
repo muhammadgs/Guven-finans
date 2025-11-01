@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Sahibkar Portalı | Güvən Finans{% endblock %}
+
+{% block header_extra_classes %}header-scrolled bg-white shadow-md{% endblock %}
+
+{% block main_nav %}
+<div class="flex flex-wrap items-center justify-between gap-6 px-4 py-4 sm:px-6 lg:px-12">
+    <div class="flex items-center gap-4">
+        <img src="{% static 'images/logo.png' %}" alt="Güvən Finans" class="h-14 w-auto drop-shadow-lg" />
+        <div>
+            <p class="text-sm font-medium uppercase tracking-[0.3em] text-blue-400">Güvən Finans</p>
+            <h1 class="font-cal-sans text-2xl text-gray-900 leading-tight">Sahibkar portalı</h1>
+        </div>
+    </div>
+    <div class="flex items-center gap-4 text-gray-500">
+        <div class="hidden lg:flex items-center gap-6 text-sm font-medium">
+            <a href="mailto:info@guvenfinans.az" class="flex items-center gap-2 hover:text-blue-500 transition-colors">
+                <i class="fas fa-envelope"></i>
+                info@guvenfinans.az
+            </a>
+            <a href="tel:+994513210989" class="flex items-center gap-2 hover:text-blue-500 transition-colors">
+                <i class="fas fa-phone"></i>
+                (+994) 51 321 0989
+            </a>
+        </div>
+        <div class="flex items-center gap-3">
+            <button type="button" class="portal-icon-btn" aria-label="Bildirişlər">
+                <i class="fa-regular fa-bell"></i>
+            </button>
+            <button type="button" class="portal-icon-btn" aria-label="Mesajlar">
+                <i class="fa-regular fa-message"></i>
+            </button>
+            <button type="button" class="portal-icon-btn" aria-label="Parametrlər">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+            <div class="flex items-center gap-3 rounded-full bg-white px-4 py-2 shadow-lg">
+                <span class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-lg font-semibold text-blue-600">{{ owner_initials }}</span>
+                <div class="text-left">
+                    <p class="text-xs uppercase tracking-widest text-blue-400">{{ owner_role_label }}</p>
+                    <p class="text-sm font-semibold text-gray-900">{{ owner_display_name }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main_nav %}
+
+{% block content %}
+<section class="relative min-h-[calc(100vh-10rem)] pt-40 pb-20" style="background-image: url('{% static "images/2 7.svg" %}'); background-size: cover; background-position: center;">
+    <div class="absolute inset-0 bg-gradient-to-b from-white/50 via-white/70 to-white/85"></div>
+    <div class="relative mx-auto flex max-w-6xl flex-col gap-12 px-4 sm:px-6 lg:flex-row lg:items-start lg:gap-16 lg:px-12">
+        <div class="max-w-xl space-y-6">
+            <p class="text-sm font-semibold uppercase tracking-[0.3em] text-blue-400">Güvən Finans</p>
+            <h2 class="font-cal-sans text-5xl leading-tight text-gray-900">
+                “{{ company_name }}”, xoş gəlmisiniz.
+            </h2>
+            <p class="text-lg text-gray-600">
+                Tapşırıq idarəetmə panelinizə xoş gəldiniz. Buradan komandamızla paylaşacağınız tapşırıqları tez bir zamanda göndərə, mövcud tapşırıqların icrasını izləyə bilərsiniz.
+            </p>
+        </div>
+        <div class="relative flex-1">
+            <div class="pointer-events-none absolute -left-40 -top-16 hidden text-[160px] font-cal-sans text-gray-200/80 lg:block">
+                G11
+            </div>
+            <div class="relative rounded-[40px] border border-blue-100 bg-white/85 p-8 shadow-2xl backdrop-blur">
+                <div class="flex flex-wrap items-center gap-6">
+                    <div class="portal-tab-wrapper active" data-tab="give-task">
+                        <button type="button" class="portal-tab">Tapşırıq ver</button>
+                    </div>
+                    <div class="portal-tab-wrapper" data-tab="tasks">
+                        <button type="button" class="portal-tab">Verilən tapşırıqlar</button>
+                    </div>
+                </div>
+                <div class="portal-card mt-10">
+                    <div class="flex h-72 items-center justify-center rounded-[32px] border-[3px] border-dashed border-blue-200 bg-blue-50/60 text-center text-lg font-cal-sans text-blue-400">
+                        Seçdiyiniz bölmə tezliklə burada olacaq.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.portal-icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(102, 156, 255, 0.35);
+    background-color: rgba(223, 235, 255, 0.65);
+    color: #4f7cff;
+    box-shadow: 0 12px 24px rgba(102, 156, 255, 0.18);
+    transition: all 0.2s ease;
+}
+
+.portal-icon-btn:hover {
+    transform: translateY(-2px);
+    background-color: rgba(223, 235, 255, 0.95);
+}
+
+.portal-tab-wrapper {
+    position: relative;
+    border-radius: 9999px;
+    border: 1px solid transparent;
+    padding: 6px;
+    transition: all 0.2s ease;
+}
+
+.portal-tab-wrapper.active {
+    box-shadow: 0 14px 32px rgba(102, 156, 255, 0.28);
+    border-color: rgba(102, 156, 255, 0.9);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.75) 100%);
+}
+
+.portal-tab {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 2.5rem;
+    border-radius: 9999px;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    background: linear-gradient(135deg, #729dff 0%, #5a84ff 100%);
+    color: #ffffff;
+    box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.2);
+}
+
+.portal-tab-wrapper.active .portal-tab {
+    transform: scale(0.92);
+}
+
+.portal-tab-wrapper:not(.active) {
+    border-color: transparent;
+    background: transparent;
+}
+
+.portal-tab-wrapper:not(.active) .portal-tab {
+    background: transparent;
+    color: #6b8cff;
+    border: 2px solid rgba(107, 140, 255, 0.2);
+    box-shadow: none;
+}
+
+.portal-tab-wrapper:not(.active) .portal-tab:hover {
+    background: rgba(114, 157, 255, 0.12);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const wrappers = document.querySelectorAll('.portal-tab-wrapper');
+    wrappers.forEach(wrapper => {
+        wrapper.addEventListener('click', () => {
+            wrappers.forEach(item => item.classList.remove('active'));
+            wrapper.classList.add('active');
+        });
+    });
+});
+</script>
+{% endblock content %}
