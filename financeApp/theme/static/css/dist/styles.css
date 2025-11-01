@@ -2774,6 +2774,12 @@
   .pt-46 {
     padding-top: calc(var(--spacing) * 46);
   }
+  .pt-50 {
+    padding-top: calc(var(--spacing) * 50);
+  }
+  .pt-56 {
+    padding-top: calc(var(--spacing) * 56);
+  }
   .pr-12 {
     padding-right: calc(var(--spacing) * 12);
   }
