@@ -77,7 +77,8 @@ def register_owner(request: HttpRequest) -> HttpResponse:
         if form.is_valid():
             registration = form.save()
             _notify_admin(registration)
-            return redirect(reverse("owner-thanks"))
+            messages.success(request, "Qeydiyyatınız tamamlandı.")
+            return redirect("home")
         messages.error(request, "Zəhmət olmasa formdakı səhvləri düzəldin.")
     else:
         form = OwnerRegistrationForm()
