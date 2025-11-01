@@ -12,13 +12,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-try:
-    SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
-except KeyError as exc:
-    raise ImproperlyConfigured("Set the DJANGO_SECRET_KEY environment variable.") from exc
-
-
 def _env_bool(value: str | None, default: bool = False) -> bool:
     if value is None:
         return default
@@ -27,6 +20,16 @@ def _env_bool(value: str | None, default: bool = False) -> bool:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = _env_bool(os.environ.get("DJANGO_DEBUG"), default=False)
+
+# SECURITY WARNING: keep the secret key used in production secret!
+# Production deployments must define the DJANGO_SECRET_KEY environment variable.
+secret = os.environ.get("DJANGO_SECRET_KEY")
+if secret:
+    SECRET_KEY = secret
+elif DEBUG:
+    SECRET_KEY = "dev-secret-key"
+else:
+    raise ImproperlyConfigured("Set the DJANGO_SECRET_KEY environment variable.")
 
 ALLOWED_HOSTS = [
     "guvenfinans.az",
