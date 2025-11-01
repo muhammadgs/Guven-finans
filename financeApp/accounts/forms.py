@@ -4,6 +4,9 @@ from django.db import transaction
 from django.contrib.auth.models import User
 from .models import OwnerRegistration, WorkerRegistration
 
+
+PHONE_PREFIX_PATTERN = re.compile(r"^(?:\+994|0)")
+
 # Pattern-lər və Ölkə Kodları (Sizin kodunuz olduğu kimi qalır)
 NUMBER_PATTERN = re.compile(r"^[0-9\s]+$")
 PHONE_ALLOWED_PATTERN = re.compile(r"^[0-9\s+\-]+$")
@@ -211,6 +214,86 @@ class OwnerRegistrationForm(forms.ModelForm):
             instance.save()  # OwnerRegistration obyektini bazaya yaz
 
         return instance
+
+
+# --- Employee registration form ---
+
+class EmployeeForm(forms.ModelForm):
+    class Meta:
+        model = WorkerRegistration
+        fields = ["first_name", "last_name", "phone", "email", "position"]
+        widgets = {
+            "first_name": forms.TextInput(
+                attrs={
+                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                    "placeholder": "Ad",
+                    "minlength": 2,
+                    "required": True,
+                }
+            ),
+            "last_name": forms.TextInput(
+                attrs={
+                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                    "placeholder": "Soyad",
+                    "minlength": 2,
+                    "required": True,
+                }
+            ),
+            "phone": forms.TextInput(
+                attrs={
+                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                    "placeholder": "Telefon nömrəsi",
+                    "required": True,
+                    "pattern": r"^(?:\\+994|0)[0-9\\s-]{7,15}$",
+                    "inputmode": "tel",
+                }
+            ),
+            "email": forms.EmailInput(
+                attrs={
+                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                    "placeholder": "E-poçt",
+                    "required": True,
+                }
+            ),
+            "position": forms.TextInput(
+                attrs={
+                    "class": "mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                    "placeholder": "Vəzifə",
+                    "required": True,
+                }
+            ),
+        }
+
+    def _clean_min_length(self, field_name: str) -> str:
+        value = self.cleaned_data.get(field_name, "").strip()
+        if len(value) < 2:
+            raise forms.ValidationError("Minimum 2 simvol daxil edilməlidir.")
+        return value
+
+    def clean_first_name(self) -> str:
+        return self._clean_min_length("first_name")
+
+    def clean_last_name(self) -> str:
+        return self._clean_min_length("last_name")
+
+    def clean_phone(self) -> str:
+        value = self.cleaned_data.get("phone", "").strip()
+        if not value:
+            raise forms.ValidationError("Telefon nömrəsi tələb olunur.")
+        if not PHONE_PREFIX_PATTERN.match(value):
+            raise forms.ValidationError("Nömrə +994 və ya 0 ilə başlamalıdır.")
+        if not PHONE_ALLOWED_PATTERN.fullmatch(value):
+            raise forms.ValidationError("Yalnız rəqəm, boşluq, '+' və '-' simvollarından istifadə edin.")
+        digits_only = re.sub(r"[^0-9]", "", value)
+        if len(digits_only) < 9:
+            raise forms.ValidationError("Telefon nömrəsi ən azı 9 rəqəmdən ibarət olmalıdır.")
+        return value
+
+    def clean_email(self) -> str:
+        value = self.cleaned_data.get("email", "").strip()
+        if not value:
+            raise forms.ValidationError("E-poçt tələb olunur.")
+        return value
 
 
 # --- WorkerRegistrationForm DƏYİŞİKLİKLƏRİ ---

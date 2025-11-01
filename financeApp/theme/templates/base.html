@@ -177,9 +177,15 @@
         {% if messages %}
             <div class="mx-auto mt-28 max-w-4xl px-4 sm:px-6 lg:px-8">
                 {% for message in messages %}
-                    <div class="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800 shadow-sm">
-                        {{ message }}
-                    </div>
+                    {% if "success" in message.tags %}
+                        <div class="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-800 shadow-sm">
+                            {{ message }}
+                        </div>
+                    {% else %}
+                        <div class="mb-4 rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3 text-sm font-medium text-yellow-800 shadow-sm">
+                            {{ message }}
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         {% endif %}

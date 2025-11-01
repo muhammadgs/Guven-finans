@@ -8,7 +8,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
-from .forms import OwnerRegistrationForm, WorkerRegistrationForm
+from .forms import EmployeeForm, OwnerRegistrationForm, WorkerRegistrationForm
 from .models import OwnerRegistration
 
 
@@ -46,6 +46,19 @@ def _notify_admin(registration: OwnerRegistration) -> None:
 
 def register_choice(request: HttpRequest) -> HttpResponse:
     return render(request, "accounts/register_choice.html")
+
+
+def isci_qeydiyyat(request: HttpRequest) -> HttpResponse:
+    if request.method == "POST":
+        form = EmployeeForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Qeydiyyat tamamlandi.")
+            return redirect("home")
+    else:
+        form = EmployeeForm()
+
+    return render(request, "accounts/isci_form.html", {"form": form})
 
 
 def register_worker(request: HttpRequest) -> HttpResponse:

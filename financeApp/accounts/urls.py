@@ -6,6 +6,7 @@ urlpatterns = [
     path('choice/', views.register_choice, name='register-choice'),
     path('owner/', views.register_owner, name='register-owner'),
     path('worker/', views.register_worker, name='register-worker'),
+    path('qeydiyyat/isci/', views.isci_qeydiyyat, name='isci_qeydiyyat'),
 
     # Bunlar hələlik belə qala bilər (views.py-dən yönlənir)
     path('owner/thanks/', views.owner_thanks, name='owner-thanks'),
