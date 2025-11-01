@@ -2,11 +2,13 @@
 {% load static %}
 
 {% block title %}Giriş{% endblock title %}
-
+{% comment %} Headerə ağ fon/qara mətn əlavə edir və əsas naviqasiyanı gizlədir {% endcomment %}
+{% block header_extra_classes %}bg-white shadow-md header-scrolled no-scroll-effect{% endblock %}
+{% block main_nav %}{% endblock %}
 {% block content %}
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-md">
-        <img class="mx-auto h-16 w-auto" src="{% static 'images/logo.png' %}" alt="Güvən Finans Logo">
+
         <h2 class="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
             Hesabınıza daxil olun
         </h2>

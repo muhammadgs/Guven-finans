@@ -47,6 +47,7 @@ else:
 ALLOWED_HOSTS = [
     "guvenfinans.az",
     "www.guvenfinans.az",
+    '127.0.0.1',
 ]
 
 
