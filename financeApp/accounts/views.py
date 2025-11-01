@@ -113,15 +113,33 @@ def worker_thanks(request: HttpRequest) -> HttpResponse:
     return render(request, "accounts/worker_thanks.html")
 
 
+@login_required
+def owner_dashboard(request: HttpRequest) -> HttpResponse:
+    owner_profile = OwnerRegistration.objects.filter(user=request.user).first()
+    if owner_profile is None:
+        owner_profile = OwnerRegistration.objects.filter(email=request.user.email).first()
+
+    company_name = owner_profile.company_name if owner_profile and owner_profile.company_name else "Biznesiniz"
+    display_name = request.user.get_full_name() or request.user.username
+    initials = "".join(part[0] for part in display_name.split() if part).upper()
+    if not initials:
+        initials = (request.user.username[:2] or "SP").upper()
+
+    context = {
+        "company_name": company_name,
+        "owner_display_name": display_name,
+        "owner_initials": initials[:2],
+        "owner_role_label": "Sahibkar",
+    }
+    return render(request, "accounts/owner_dashboard.html", context)
+
+
 def login_view(request: HttpRequest) -> HttpResponse:
     """
     İstifadəçi giriş səhifəsi (Sahibkar və İşçi üçün ortaq)
     """
     if request.user.is_authenticated:
-        # Əgər artıq daxil olubsa, birbaşa dashboard-a yönləndir
-        # HƏLƏLİK dashboard səhifəmiz yoxdur, ona görə ana səhifəyə yönləndiririk
-        # return redirect('owner_dashboard') # Gələcəkdə belə olacaq
-        return redirect('/')  # Hələlik ana səhifəyə
+        return redirect("owner-dashboard")
 
     if request.method == "POST":
         # Django-nun daxili AuthenticationForm-u istifadə edirik.
@@ -152,7 +170,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
                 # except:
                 #    pass # və ya worker_dashboard-a yönləndir
 
-                return redirect('/')
+                return redirect("owner-dashboard")
             else:
                 # İstifadəçi yoxdursa və ya şifrə səhvdirsə
                 messages.error(request, "E-poçt və ya şifrə yanlışdır.")
@@ -174,3 +192,4 @@ def logout_view(request: HttpRequest) -> HttpResponse:
     logout(request)
     messages.info(request, "Hesabınızdan uğurla çıxış etdiniz.")
     return redirect('login')  # Çıxışdan sonra login səhifəsinə yönləndir
+
