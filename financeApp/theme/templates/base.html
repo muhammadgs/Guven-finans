@@ -20,6 +20,22 @@
     <link href="https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/public/web/cal-sans.css" rel="stylesheet">
 
      <style>
+        :root {
+            --header-offset: 9.5rem;
+        }
+
+        @media (max-width: 1024px) {
+            :root {
+                --header-offset: 10.5rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            :root {
+                --header-offset: 12rem;
+            }
+        }
+
         #main-header {
             background-color: rgba(11, 27, 67, 0.95);
             backdrop-filter: blur(12px);
@@ -107,6 +123,10 @@
         .header-scrolled #login-btn {
             background-color: #669CFF; /* Yeni rəng */
             color: white;
+        }
+
+        main#main {
+            padding-top: var(--header-offset);
         }
     </style>
 </head>
