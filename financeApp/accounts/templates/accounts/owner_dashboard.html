@@ -65,7 +65,7 @@
             </div>
             <div class="relative rounded-[40px] border border-blue-100 bg-white/85 p-8 shadow-2xl backdrop-blur">
                 <div class="flex flex-wrap items-center gap-6">
-                    <div class="portal-tab-wrapper active" data-tab="give-task">
+                    <div class="portal-tab-wrapper" data-tab="give-task">
                         <button type="button" class="portal-tab">Tapşırıq ver</button>
                     </div>
                     <div class="portal-tab-wrapper" data-tab="tasks">
@@ -126,50 +126,25 @@
 .portal-tab-wrapper {
     position: relative;
     display: inline-flex;
-    padding: 6px;
+    align-items: center;
+    justify-content: center;
     border-radius: 9999px;
     transition: all 0.25s ease;
     box-sizing: border-box;
-    background: transparent;
-    border: 4px solid transparent;
-}
-
-.portal-tab-wrapper::before,
-.portal-tab-wrapper::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    opacity: 0;
-    transform: scale(0.96);
-    transition: all 0.25s ease;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.portal-tab-wrapper::before {
-    background: linear-gradient(135deg, rgba(114, 157, 255, 0.45) 0%, rgba(114, 157, 255, 0.25) 100%);
-}
-
-.portal-tab-wrapper::after {
-    inset: 6px;
-    background: rgba(255, 255, 255, 0.95);
-    z-index: 1;
 }
 
 .portal-tab-wrapper.active {
+    padding: 6px;
+    border: 4px solid #5a84ff;
+    background: #ffffff;
     box-shadow: 0 14px 32px rgba(102, 156, 255, 0.28);
 }
 
-.portal-tab-wrapper.active::before {
-    opacity: 1;
-    transform: scale(1);
-    background: linear-gradient(135deg, #729dff 0%, #5a84ff 100%);
-}
-
-.portal-tab-wrapper.active::after {
-    opacity: 1;
-    transform: scale(1);
+.portal-tab-wrapper:not(.active) {
+    padding: 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
 }
 
 .portal-tab {
@@ -177,31 +152,28 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: calc(0.75rem - 6px) calc(2.5rem - 6px);
+    padding: 0.75rem 2.5rem;
     border-radius: 9999px;
     border: none;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
     transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
-    background: linear-gradient(135deg, #729dff 0%, #5a84ff 100%);
-    color: #ffffff;
-    box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.2);
+    background: rgba(90, 132, 255, 0.15);
+    color: #4f7cff;
+    box-shadow: none;
     z-index: 1;
 }
 
 .portal-tab-wrapper.active .portal-tab {
     transform: scale(0.9);
-}
-
-.portal-tab-wrapper:not(.active) .portal-tab {
-    background: transparent;
-    color: #6b8cff;
-    box-shadow: none;
+    background: linear-gradient(135deg, #729dff 0%, #5a84ff 100%);
+    color: #ffffff;
+    box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.25);
 }
 
 .portal-tab-wrapper:not(.active) .portal-tab:hover {
-    background: rgba(114, 157, 255, 0.12);
+    background: rgba(90, 132, 255, 0.25);
 }
 </style>
 
