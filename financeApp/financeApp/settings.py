@@ -19,7 +19,20 @@ def _env_bool(value: str | None, default: bool = False) -> bool:
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = _env_bool(os.environ.get("DJANGO_DEBUG"), default=False)
+# Default to DEBUG=True for local development; production deployments must
+# explicitly disable debug by setting DJANGO_DEBUG to a falsey value.
+DEBUG = _env_bool(os.environ.get("DJANGO_DEBUG"), default=True)
+
+# SECURITY WARNING: keep the secret key used in production secret!
+# Production deployments must define the DJANGO_SECRET_KEY environment variable
+# (no development fallback when DEBUG is disabled).
+secret = os.environ.get("DJANGO_SECRET_KEY")
+if secret:
+    SECRET_KEY = secret
+elif DEBUG:
+    SECRET_KEY = "dev-secret-key"
+else:
+    raise ImproperlyConfigured("Set the DJANGO_SECRET_KEY environment variable.")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # Production deployments must define the DJANGO_SECRET_KEY environment variable.
