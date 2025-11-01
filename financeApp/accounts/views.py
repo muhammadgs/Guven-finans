@@ -161,8 +161,6 @@ def login_view(request: HttpRequest) -> HttpResponse:
                 # TODO: İstifadəçinin Sahibkar yoxsa İşçi olduğunu yoxlayıb
                 # müvafiq panelə yönləndirmək lazımdır.
                 # Hələlik ana səhifəyə yönləndiririk.
-                messages.success(request, f"Xoş gəldiniz, {user.first_name}!")
-
                 # GƏLƏCƏKDƏ:
                 # try:
                 #    if request.user.ownerregistration:

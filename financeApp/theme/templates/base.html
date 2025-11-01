@@ -20,6 +20,18 @@
     <link href="https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/public/web/cal-sans.css" rel="stylesheet">
 
      <style>
+        #main-header {
+            background-color: rgba(11, 27, 67, 0.95);
+            backdrop-filter: blur(12px);
+            color: #FFFFFF;
+        }
+
+        #main-header.header-scrolled {
+            background-color: rgba(255, 255, 255, 0.98);
+            color: #1F2937; /* text-gray-800 */
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+        }
+
         /* Default (Şəffaf Header) */
         .nav-link, .logo-text {
             color: white;
@@ -101,7 +113,7 @@
 <body class="bg-white text-gray-900 antialiased font-poppins-light">
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
 
-    <header id="main-header" class="fixed top-0 z-40 w-full transition-all duration-300 text-white {% block header_extra_classes %}{% endblock %}">
+    <header id="main-header" class="fixed top-0 z-40 w-full transition-all duration-300 {% block header_extra_classes %}{% endblock %}">
 
         <div class="flex items-center justify-between py-3 px-4 sm:px-6 lg:px-8">
             <div class="flex items-center gap-6 text-sm font-poppins-light pl-12">
@@ -284,33 +296,20 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const header = document.getElementById('main-header');
-            if (!header) return;
+            if (!header || header.classList.contains('no-scroll-effect')) {
+                return;
+            }
 
-            let lastScrollTop = 0;
-
-            window.addEventListener('scroll', () => {
-                let scrollTop = window.scrollY || document.documentElement.scrollTop;
-
-                if (scrollTop > lastScrollTop && scrollTop > 200) {
-                    // Scroll Down - Hide header
-                    header.style.transform = 'translateY(-100%)';
+            const updateHeaderState = () => {
+                if (window.scrollY > 10) {
+                    header.classList.add('header-scrolled');
                 } else {
-                    // Scroll Up - Show header
-                    header.style.transform = 'translateY(0)';
-
-                    if (scrollTop > 50) {
-                        // Add scrolled styles
-                        header.classList.add('bg-white', 'shadow-md', 'header-scrolled');
-                    } else {
-                        // Remove scrolled styles (at top)
-                        // YALNIZ o səhifələrdə silin ki, "no-scroll-effect" sinfi YOXDUR
-                        if (!header.classList.contains('no-scroll-effect')) {
-                            header.classList.remove('bg-white', 'shadow-md', 'header-scrolled');
-                        }
-                    }
+                    header.classList.remove('header-scrolled');
                 }
-                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
-            });
+            };
+
+            updateHeaderState();
+            window.addEventListener('scroll', updateHeaderState, { passive: true });
         });
     </script>
 </body>
