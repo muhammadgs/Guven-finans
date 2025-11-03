@@ -8,8 +8,52 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
+from typing import Optional
+
 from .forms import EmployeeForm, OwnerRegistrationForm, WorkerRegistrationForm
-from .models import OwnerRegistration
+from .models import OwnerRegistration, WorkerRegistration
+
+
+def _get_owner_profile(user) -> Optional[OwnerRegistration]:
+    if not user.is_authenticated:
+        return None
+
+    try:
+        owner_profile = user.ownerregistration
+        if owner_profile:
+            return owner_profile
+    except OwnerRegistration.DoesNotExist:
+        pass
+
+    if user.email:
+        return OwnerRegistration.objects.filter(email=user.email).first()
+    return OwnerRegistration.objects.filter(user=user).first()
+
+
+def _get_worker_profile(user) -> Optional[WorkerRegistration]:
+    if not user.is_authenticated:
+        return None
+
+    try:
+        worker_profile = user.workerregistration
+        if worker_profile:
+            return worker_profile
+    except WorkerRegistration.DoesNotExist:
+        pass
+
+    if user.email:
+        worker_profile = WorkerRegistration.objects.filter(email=user.email).first()
+        if worker_profile:
+            return worker_profile
+    return WorkerRegistration.objects.filter(user=user).first()
+
+
+def _resolve_dashboard_url_name(user) -> str:
+    if _get_worker_profile(user):
+        return "worker-dashboard"
+    if _get_owner_profile(user):
+        return "owner-dashboard"
+    return "owner-dashboard"
 
 
 def _notify_admin(registration: OwnerRegistration) -> None:
@@ -115,9 +159,7 @@ def worker_thanks(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def owner_dashboard(request: HttpRequest) -> HttpResponse:
-    owner_profile = OwnerRegistration.objects.filter(user=request.user).first()
-    if owner_profile is None:
-        owner_profile = OwnerRegistration.objects.filter(email=request.user.email).first()
+    owner_profile = _get_owner_profile(request.user)
 
     company_name = owner_profile.company_name if owner_profile and owner_profile.company_name else "Biznesiniz"
     display_name = request.user.get_full_name() or request.user.username
@@ -134,12 +176,36 @@ def owner_dashboard(request: HttpRequest) -> HttpResponse:
     return render(request, "accounts/owner_dashboard.html", context)
 
 
+@login_required
+def worker_dashboard(request: HttpRequest) -> HttpResponse:
+    worker_profile = _get_worker_profile(request.user)
+    if worker_profile is None:
+        return redirect("owner-dashboard")
+
+    display_name = (request.user.get_full_name() or "").strip()
+    if not display_name and worker_profile:
+        display_name = f"{worker_profile.first_name} {worker_profile.last_name}".strip()
+    if not display_name:
+        display_name = request.user.username or worker_profile.email
+
+    initials = "".join(part[0] for part in display_name.split() if part).upper()
+    if not initials:
+        initials = (request.user.username[:2] or "IW").upper()
+
+    context = {
+        "worker_display_name": display_name,
+        "worker_initials": initials[:2],
+        "worker_role_label": "İşçi",
+    }
+    return render(request, "accounts/worker_dashboard.html", context)
+
+
 def login_view(request: HttpRequest) -> HttpResponse:
     """
     İstifadəçi giriş səhifəsi (Sahibkar və İşçi üçün ortaq)
     """
     if request.user.is_authenticated:
-        return redirect("owner-dashboard")
+        return redirect(_resolve_dashboard_url_name(request.user))
 
     if request.method == "POST":
         # Django-nun daxili AuthenticationForm-u istifadə edirik.
@@ -168,7 +234,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
                 # except:
                 #    pass # və ya worker_dashboard-a yönləndir
 
-                return redirect("owner-dashboard")
+                return redirect(_resolve_dashboard_url_name(user))
             else:
                 # İstifadəçi yoxdursa və ya şifrə səhvdirsə
                 messages.error(request, "E-poçt və ya şifrə yanlışdır.")
