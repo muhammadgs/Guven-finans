@@ -228,4 +228,15 @@
     mask-composite: exclude;
 }
 </style>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const wrappers = document.querySelectorAll('.portal-tab-wrapper');
+    wrappers.forEach(wrapper => {
+        wrapper.addEventListener('click', () => {
+            wrappers.forEach(item => item.classList.remove('active'));
+            wrapper.classList.add('active');
+        });
+    });
+});
+</script>
 {% endblock content %}
