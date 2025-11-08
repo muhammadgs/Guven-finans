@@ -253,6 +253,96 @@ DƏYİŞİKLİK:
 
     </div>
 </section>
+
+<section class="bg-gray-50 py-16 sm:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+            <div class="text-center lg:text-left">
+                <h2 class="text-3xl font-cal-sans tracking-tight text-gray-900 sm:text-4xl">
+                    Peşəkar konsultasiya üçün müraciət edin
+                </h2>
+                <p class="mt-6 text-lg text-gray-600">
+                    Biznesinizin ehtiyaclarına uyğun fərdi maliyyə və mühasibatlıq məsləhətləri almaq üçün bizimlə əlaqə saxlayın. Peşəkar komandamız sizə ən effektiv həlləri təklif etməyə hazırdır.
+                </p>
+
+                <div class="mt-10 flex items-center justify-center lg:justify-start gap-x-6">
+                    <a href="tel:+994501234567" class="flex items-center gap-3 rounded-md bg-blue-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>Zəng edin</span>
+                    </a>
+                    <a href="mailto:info@guvenfinans.az" class="text-base font-semibold leading-6 text-gray-900 hover:text-gray-700">
+                        Email yazın <span aria-hidden="true">→</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white p-8 rounded-lg shadow-xl">
+                {% if messages %}
+                    <div class="mb-4">
+                        {% for message in messages %}
+                            <div class="rounded-md p-4 {% if message.tags == 'success' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <form action="{% url 'home' %}#konsultasiya-form" method="POST" id="konsultasiya-form">
+                    {% csrf_token %}
+                    <div class="space-y-6">
+                        <div>
+                            <label for="id_ad_soyad" class="block text-sm font-medium leading-6 text-gray-900">Ad, Soyad</label>
+                            <div class="mt-2">
+                                {{ konsultasiya_form.ad_soyad }}
+                            </div>
+                            {% if konsultasiya_form.ad_soyad.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ konsultasiya_form.ad_soyad.errors|first }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <label for="id_email" class="block text-sm font-medium leading-6 text-gray-900">Email ünvanı</label>
+                            <div class="mt-2">
+                                {{ konsultasiya_form.email }}
+                            </div>
+                            {% if konsultasiya_form.email.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ konsultasiya_form.email.errors|first }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <label for="id_xidmet" class="block text-sm font-medium leading-6 text-gray-900">Xidmət növü</label>
+                            <div class="mt-2">
+                                {{ konsultasiya_form.xidmet }}
+                            </div>
+                            {% if konsultasiya_form.xidmet.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ konsultasiya_form.xidmet.errors|first }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <label for="id_mesaj" class="block text-sm font-medium leading-6 text-gray-900">Mesajınız</label>
+                            <div class="mt-2">
+                                {{ konsultasiya_form.mesaj }}
+                            </div>
+                            {% if konsultasiya_form.mesaj.errors %}
+                                <p class="mt-1 text-sm text-red-600">{{ konsultasiya_form.mesaj.errors|first }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <button type="submit" class="w-full flex justify-center rounded-md bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                                Müraciəti göndər
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</section>
 {% comment %}
 {% endcomment %}
 
