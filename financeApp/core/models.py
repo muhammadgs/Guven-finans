@@ -3,11 +3,11 @@ from django.db import models
 
 class Konsultasiya(models.Model):
     class Xidmetler(models.TextChoices):
-        MUHASIBAT = "MUHASIBAT", "Mühasibatlıq xidmətləri"
-        VERGI = "VERGI", "Vergi xidmətləri"
+        MUHASIBAT = "MUHASIBAT", "Mühasibatlıq"
+        VERGI = "VERGI", "Vergi"
         IKT = "IKT", "İKT"
-        INSAN_RESURS = "INSAN_RESURS", "İnsan Resursları"
-        HUQUQI = "HUQUQI", "Hüquqi xidmətlərin təsviri"
+        INSAN_RESURSLARI = "INSAN_RESURSLARI", "İnsan Resursları"
+        HUQUQI = "HUQUQI", "Hüquqi"
 
     ad_sirket = models.CharField(max_length=255)
     elaqe_nomresi = models.CharField(max_length=20)

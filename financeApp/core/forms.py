@@ -51,6 +51,7 @@ class KonsultasiyaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields["xidmet"].choices = Konsultasiya.Xidmetler.choices
         self.fields["elaqe_nomresi"].widget.attrs.update(
             {
                 "class": "w-full rounded-xl border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
