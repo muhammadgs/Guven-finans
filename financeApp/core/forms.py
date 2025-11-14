@@ -4,6 +4,13 @@ from django.core.validators import RegexValidator
 from .models import Konsultasiya
 
 
+BASE_INPUT_CLASSES = (
+    "mt-1 block w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 "
+    "text-gray-900 shadow-sm transition focus:border-blue-500 focus:outline-none "
+    "focus:ring-2 focus:ring-blue-500/50"
+)
+
+
 class KonsultasiyaForm(forms.ModelForm):
     honeypot = forms.CharField(required=False, widget=forms.HiddenInput)
 
@@ -28,20 +35,20 @@ class KonsultasiyaForm(forms.ModelForm):
         widgets = {
             "ad_sirket": forms.TextInput(
                 attrs={
-                    "class": "w-full rounded-xl border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                    "class": BASE_INPUT_CLASSES,
                     "placeholder": "Adınız və ya şirkət adı",
                     "required": "required",
                 }
             ),
             "xidmet": forms.Select(
                 attrs={
-                    "class": "w-full rounded-xl border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                    "class": f"{BASE_INPUT_CLASSES} appearance-none",
                     "required": "required",
                 }
             ),
             "etrafli": forms.Textarea(
                 attrs={
-                    "class": "w-full rounded-xl border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                    "class": f"{BASE_INPUT_CLASSES} resize-none leading-relaxed",
                     "rows": 4,
                     "placeholder": "Tələbinizi ətraflı yazın",
                     "required": "required",
@@ -54,7 +61,7 @@ class KonsultasiyaForm(forms.ModelForm):
         self.fields["xidmet"].choices = Konsultasiya.Xidmetler.choices
         self.fields["elaqe_nomresi"].widget.attrs.update(
             {
-                "class": "w-full rounded-xl border border-gray-200 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "class": BASE_INPUT_CLASSES,
                 "placeholder": "+994xxxxxxxxx və ya 0xxxxxxxxx",
                 "required": "required",
                 "minlength": "10",
