@@ -58,7 +58,10 @@ class KonsultasiyaForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["xidmet"].choices = Konsultasiya.Xidmetler.choices
+        self.fields["xidmet"].choices = [
+            ("", "Xidmət seçin"),
+            *Konsultasiya.Xidmetler.choices,
+        ]
         self.fields["elaqe_nomresi"].widget.attrs.update(
             {
                 "class": BASE_INPUT_CLASSES,
