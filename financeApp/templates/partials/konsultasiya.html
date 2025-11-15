@@ -16,7 +16,17 @@
 
                     <div class="space-y-2">
                         <label for="id_ad_sirket" class="block text-sm font-medium text-gray-700">Ad &amp; şirkət adı</label>
-                        {{ form.ad_sirket }}
+                        <input
+                            type="text"
+                            name="{{ form.ad_sirket.html_name }}"
+                            id="id_ad_sirket"
+                            value="{{ form.ad_sirket.value|default_if_none:'' }}"
+                            class="mt-1 block w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-900 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                            placeholder="Adınız və ya şirkət adı"
+                            required
+                            minlength="2"
+                            maxlength="255"
+                        />
                         {% if form.ad_sirket.errors %}
                         <p class="mt-1 text-sm text-red-600">{{ form.ad_sirket.errors|join:" " }}</p>
                         {% endif %}
@@ -32,7 +42,16 @@
 
                     <div class="space-y-2">
                         <label for="id_xidmet" class="block text-sm font-medium text-gray-700">Xidmət seçin</label>
-                        {{ form.xidmet }}
+                        <select
+                            name="{{ form.xidmet.html_name }}"
+                            id="id_xidmet"
+                            class="mt-1 block w-full appearance-none rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-900 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                            required
+                        >
+                            {% for value, label in form.xidmet.field.choices %}
+                            <option value="{{ value }}" {% if form.xidmet.value == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
                         {% if form.xidmet.errors %}
                         <p class="mt-1 text-sm text-red-600">{{ form.xidmet.errors|join:" " }}</p>
                         {% endif %}
@@ -40,7 +59,15 @@
 
                     <div class="space-y-2">
                         <label for="id_etrafli" class="block text-sm font-medium text-gray-700">Ətraflı yazın</label>
-                        {{ form.etrafli }}
+                        <textarea
+                            name="{{ form.etrafli.html_name }}"
+                            id="id_etrafli"
+                            rows="6"
+                            class="mt-1 block w-full resize-none rounded-2xl border border-gray-200 bg-white px-4 py-3 text-gray-900 shadow-sm transition focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                            placeholder="Tələbinizi ətraflı yazın"
+                            required
+                            minlength="5"
+                        >{{ form.etrafli.value|default_if_none:'' }}</textarea>
                         {% if form.etrafli.errors %}
                         <p class="mt-1 text-sm text-red-600">{{ form.etrafli.errors|join:" " }}</p>
                         {% endif %}
