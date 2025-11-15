@@ -5,6 +5,58 @@
 
 {% block content %}
 
+<style>
+    .projects-carousel {
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+    }
+
+    .projects-carousel::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .projects-carousel::-webkit-scrollbar-thumb {
+        background-color: rgba(100, 116, 139, 0.35);
+        border-radius: 9999px;
+    }
+
+    .project-card {
+        flex: 0 0 85%;
+    }
+
+    @media (min-width: 640px) {
+        .project-card {
+            flex: 0 0 55%;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .project-card {
+            flex: 0 0 calc((100% - 3rem) / 3);
+        }
+    }
+
+    .projects-carousel.is-dragging {
+        cursor: grabbing;
+        cursor: -webkit-grabbing;
+    }
+
+    .project-image-wrapper {
+        position: relative;
+        width: 100%;
+        padding-top: 100%;
+    }
+
+    .project-image-wrapper img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+
 {% if messages %}
 <div class="mx-auto mt-6 max-w-3xl px-4 sm:px-6 lg:px-8">
     {% for message in messages %}
@@ -189,6 +241,40 @@ DƏYİŞİKLİK:
 
 {% comment %}
 {% endcomment %}
+<section id="layiheler" class="bg-white py-16 sm:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+                <p class="text-base font-semibold text-blue-600">Layihələrimiz</p>
+                <h2 class="mt-2 text-3xl font-cal-sans tracking-tight text-gray-900 sm:text-4xl">Ən son layihələrimizlə tanış olun</h2>
+            </div>
+            {% if projects %}
+            <p class="text-sm text-gray-500 sm:text-right">Daha çox layihəni görmək üçün üfiqi olaraq sürüşdürün.</p>
+            {% endif %}
+        </div>
+
+        {% if projects %}
+        <div class="projects-carousel mt-10 flex cursor-grab gap-6 overflow-x-auto pb-4" data-projects-carousel>
+            {% for project in projects %}
+            <article class="project-card flex-shrink-0 rounded-3xl border border-gray-200 bg-gray-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                <div class="project-image-wrapper overflow-hidden rounded-t-3xl">
+                    <img src="{{ project.image.url }}" alt="{{ project.name }}" loading="lazy">
+                </div>
+                <div class="flex h-full flex-col items-center gap-4 px-6 pb-8 pt-6 text-center">
+                    <h3 class="text-xl font-semibold text-gray-900">{{ project.name }}</h3>
+                    <a href="{{ project.link }}" class="inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-2 text-sm font-medium text-white transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" target="_blank" rel="noopener">Bax</a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="mt-8 rounded-3xl border border-dashed border-gray-300 bg-gray-50 px-6 py-12 text-center text-gray-500">
+            <p>Hazırda təqdim ediləcək layihə yoxdur.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
 <section class="bg-white py-16 sm:py-24">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="mb-16">
@@ -266,6 +352,61 @@ DƏYİŞİKLİK:
 {% include "partials/konsultasiya.html" with form=form %}
 {% comment %}
 {% endcomment %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const carousel = document.querySelector('[data-projects-carousel]');
+        if (!carousel) {
+            return;
+        }
+
+        const onWheel = (event) => {
+            if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
+                return;
+            }
+
+            event.preventDefault();
+            carousel.scrollBy({ left: event.deltaY, behavior: 'auto' });
+        };
+
+        carousel.addEventListener('wheel', onWheel, { passive: false });
+
+        let isDown = false;
+        let startX = 0;
+        let scrollLeft = 0;
+
+        const startDrag = (event) => {
+            if (event.button !== 0) {
+                return;
+            }
+            isDown = true;
+            carousel.classList.add('is-dragging');
+            startX = event.pageX - carousel.offsetLeft;
+            scrollLeft = carousel.scrollLeft;
+        };
+
+        const stopDrag = () => {
+            isDown = false;
+            carousel.classList.remove('is-dragging');
+        };
+
+        const moveDrag = (event) => {
+            if (!isDown) {
+                return;
+            }
+            event.preventDefault();
+            const x = event.pageX - carousel.offsetLeft;
+            const walk = (x - startX) * 1.2;
+            carousel.scrollLeft = scrollLeft - walk;
+        };
+
+        carousel.addEventListener('mousedown', startDrag);
+        window.addEventListener('mouseup', stopDrag);
+        carousel.addEventListener('mouseleave', stopDrag);
+        carousel.addEventListener('mousemove', moveDrag);
+        carousel.addEventListener('dragstart', (event) => event.preventDefault());
+    });
+</script>
 
 {% endblock %}
 
