@@ -6,54 +6,60 @@
 {% block content %}
 
 <style>
+    /* Scrollbar'ı gizle */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    /* Karusel Alanı */
     .projects-carousel {
-        scroll-behavior: smooth;
-        scrollbar-width: thin;
-    }
-
-    .projects-carousel::-webkit-scrollbar {
-        height: 8px;
-    }
-
-    .projects-carousel::-webkit-scrollbar-thumb {
-        background-color: rgba(100, 116, 139, 0.35);
-        border-radius: 9999px;
-    }
-
-    .project-card {
-        flex: 0 0 85%;
-    }
-
-    @media (min-width: 640px) {
-        .project-card {
-            flex: 0 0 55%;
-        }
-    }
-
-    @media (min-width: 1024px) {
-        .project-card {
-            flex: 0 0 calc((100% - 3rem) / 3);
-        }
+        display: flex;
+        gap: 2rem; /* Kartlar arası boşluk */
+        overflow-x: auto; /* Yatay kaydırma */
+        cursor: grab; /* Tutma imleci */
+        padding: 1rem;
+        scroll-behavior: auto; /* JS ile kontrol edeceğimiz için auto */
     }
 
     .projects-carousel.is-dragging {
-        cursor: grabbing;
-        cursor: -webkit-grabbing;
+        cursor: grabbing; /* Tutunca sıkma imleci */
+        user-select: none;
+    }
+
+    /* KART TASARIMI - Sabit ve Küçük Boyut */
+    .project-card {
+        flex: 0 0 auto; /* Kartların büzülmesini engelle */
+        width: 320px;   /* SABİT GENİŞLİK (Daha küçük ve derli toplu) */
+        display: flex;
+        flex-direction: column;
+        background: white;
+        border-radius: 1.5rem; /* rounded-3xl */
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Kartın üzerine gelince hafif büyüme efekti */
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
 
     .project-image-wrapper {
-        position: relative;
+        height: 200px; /* Resim yüksekliği sabit */
         width: 100%;
-        padding-top: 100%;
+        position: relative;
     }
 
     .project-image-wrapper img {
-        position: absolute;
-        top: 0;
-        left: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
+        pointer-events: none; /* Sürüklerken resmin takılmasını önler */
     }
 </style>
 
@@ -67,43 +73,20 @@
 </div>
 {% endif %}
 
-{% comment %}
-HERO BÖLMƏSİ DƏYİŞİKLİKLƏRİ:
-1. Mətn blokunu sola çəkmək (daraltmaq) üçün 'max-w-3xl' -> 'max-w-2xl' ilə əvəz edildi.
-2. H1 üçün 'font-cal-sans' əlavə edildi, 'font-bold' silindi.
-3. 'İndi başlayın' düyməsi üçün 'font-cal-sans' əlavə edildi, 'font-semibold' silindi.
-4. Paragraf mətni sizin təqdim etdiyiniz ilə eyniləşdirildi (artıq əvvəlki cavabda düzgün idi).
-{% endcomment %}
 <section id="hero-section" class="relative text-white flex items-center py-16" style="min-height: calc(100vh - var(--header-offset)); background-image: url('{% static 'images/SVG.svg' %}');">
-
-    {% comment %}
-    DƏYİŞİKLİK:
-    1. 'mx-auto' sinfi silindi (bloku sola çəkmək üçün).
-    2. 'max-w-lg' yenidən 'max-w-2xl' edildi (mətnə bir az daha çox en vermək üçün).
-    {% endcomment %}
     <div class="relative z-10 max-w-7xl px-4 sm:px-6 lg:px-8">
-
         <div class="relative space-y-8 max-w-2xl mx-12 pt-46">
-
             <h1 class="font-cal-sans text-6xl tracking-tight">İnnovativ maliyyə həlləri</h1>
-            {% comment %} Bu paragraf body-dən 'font-poppins-light' alacaq {% endcomment %}
             <p class="max-w-2xl text-[17px] text-blue-100">
                 Rəqəmlərin dili ilə şirkətinizi sizə tanıtaraq, şirkətlərin maliyyə uçot sistemini inkişaf etdirib, innovativ maliyyə həlləri nəticəsində şirkətinizə dəyər qatırıq.
             </p>
-
-            {% comment %} Düymə üçün font-cal-sans tətbiq edin {% endcomment %}
             <a href="{% url 'register-choice' %}" class="font-cal-sans inline-flex items-center justify-center rounded-full px-6 py-3 text-base text-white shadow-sm transition hover:opacity-90" style="background-color: #669CFF;">
                 İndi başlayın...
             </a>
-
             <img src="{% static 'images/logo.png' %}" alt="G11 Logo" class="absolute -top-0 left-0 h-40 w-auto opacity-30">        </div>
-
     </div>
 </section>
 
-{% comment %} Səhifənin qalan hissəsi olduğu kimi davam edir... {% endcomment %}
-
-{% comment %} DƏYİŞİKLİK EDİLDİ (ƏVVƏLKİ İSTƏK): padding azaldıldı {% endcomment %}
 <section class="bg-white pt-16 sm:pt-24 pb-8 sm:pb-12">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 gap-6 md:grid-cols-4">
@@ -117,29 +100,20 @@ HERO BÖLMƏSİ DƏYİŞİKLİKLƏRİ:
     </div>
 </section>
 
-{% comment %}
-BİZ KİMİK? BÖLMƏSİ - YENİLƏNDİ (ƏVVƏLKİ İSTƏK)
-{% endcomment %}
-{% comment %} DƏYİŞİKLİK EDİLDİ (ƏVVƏLKİ İSTƏK): padding azaldıldı {% endcomment %}
 <section class="bg-gray-50 pt-8 sm:pt-12 pb-8 sm:pb-12">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:items-center">
-
             <div>
                 <p class="text-base font-semibold text-blue-600">Biz kimik?</p>
-
                 <h2 class="mt-3 text-3xl text-gray-900 sm:text-4xl font-cal-sans">
                     Rəqəmlərin dili ilə şirkətiniz üçün innovativ həllər!
                 </h2>
-
                 <p class="mt-6 text-lg text-gray-600">
                     Rəqəmlərin dili ilə şirkətinizi daha dərindən analiz edərək, mövcud maliyyə vəziyyətinizi aydın şəkildə görməyinizə kömək edirik. Dəqiq maliyyə uçotu və analitik hesabatlar vasitəsilə şirkətinizin güclü və zəif tərəflərini müəyyənləşdirir, inkişaf potensialınızı qiymətləndiririk.
                 </p>
-
                 <p class="mt-4 text-lg text-gray-600">
                     Şirkətlərin maliyyə uçot sistemini inkişaf etdirməklə, biznes proseslərinizi daha şəffaf və idarəolunan hala gətiririk. İnnovativ maliyyə həllərimiz sayəsində xərclərinizi azaldır, gəlirliliyinizi artırır və risklərinizi minimuma endiririk.
                 </p>
-
                 <dl class="mt-8 space-y-6">
                     <div class="flex items-start gap-4">
                         <dt class="flex-shrink-0">
@@ -152,7 +126,6 @@ BİZ KİMİK? BÖLMƏSİ - YENİLƏNDİ (ƏVVƏLKİ İSTƏK)
                             <p class="mt-1 text-base text-gray-600">Rəqəmlərin dili ilə şirkətinizi sizə tanıtmaq.</p>
                         </dd>
                     </div>
-
                     <div class="flex items-start gap-4">
                         <dt class="flex-shrink-0">
                             <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
@@ -164,7 +137,6 @@ BİZ KİMİK? BÖLMƏSİ - YENİLƏNDİ (ƏVVƏLKİ İSTƏK)
                             <p class="mt-1 text-base text-gray-600">Şirkətlərin maliyyə uçot sistemini inkişaf etdirmək.</p>
                         </dd>
                     </div>
-
                     <div class="flex items-start gap-4">
                         <dt class="flex-shrink-0">
                             <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 text-blue-600">
@@ -184,15 +156,7 @@ BİZ KİMİK? BÖLMƏSİ - YENİLƏNDİ (ƏVVƏLKİ İSTƏK)
             </div>
     </div>
 </section>
-{% comment %} BİZ KİMİK? BÖLMƏSİNİN SONU {% endcomment %}
 
-
-{% comment %}
-NİYƏ BİZ? BÖLMƏSİ - YENİLƏNDİ (29/10/2025)
-DƏYİŞİKLİK:
-1. 'bg-blue-800' sinfi silindi.
-2. 'style' atributu ilə xüsusi linear-gradient əlavə edildi.
-{% endcomment %}
 <section class="bg-gray-50 pt-8 sm:pt-12 pb-16 sm:pb-24">
     <div class="mx-auto px-4 sm:px-8 lg:px-26">
         <div class="grid grid-cols-1 lg:grid-cols-2 rounded-[5.5rem] shadow-xl overflow-hidden" style="background-image: linear-gradient(to right, #0E3EA4 22%, #0B1B43 66%);">
@@ -202,18 +166,14 @@ DƏYİŞİKLİK:
             </div>
 
             <div class="text-white p-8 sm:p-12 lg:p-12 flex flex-col justify-center">
-
                 <p class="text-base font-semibold text-blue-200">Niyə biz?</p>
-
                 <h2 class="mt-3 text-3xl font-cal-sans sm:text-4xl">Güvənli və innovativ maliyyə həlləri mərkəzi!</h2>
-
                 <p class="mt-6 text-lg text-blue-100">
                     Finozada səyahətimiz sadə, lakin güclü bir missiya ilə başladı: ekspert rəhbərliyi və sarsılmaz dəstək vasitəsilə fərdlərə və bizneslərə maliyyə məqsədlərinə çatmaq üçün səlahiyyət vermək.
                 </p>
                 <p class="mt-4 text-lg text-blue-100">
                     Maliyyə sənayesində uzun illər təcrübəmizlə biz dürüstlük, şəffaflıq və mükəmməllik üçün reputasiya qurmuşuq.
                 </p>
-
                 <ul class="mt-8 space-y-4 text-lg">
                     <li class="flex items-center gap-3">
                         <i class="fas fa-check text-xl text-green-400"></i>
@@ -236,33 +196,38 @@ DƏYİŞİKLİK:
         </div>
     </div>
 </section>
-{% comment %} NİYƏ BİZ? BÖLMƏSİNİN SONU {% endcomment %}
 
-
-{% comment %}
-{% endcomment %}
 <section id="layiheler" class="bg-white py-16 sm:py-24">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-10">
             <div>
                 <p class="text-base font-semibold text-blue-600">Layihələrimiz</p>
                 <h2 class="mt-2 text-3xl font-cal-sans tracking-tight text-gray-900 sm:text-4xl">Ən son layihələrimizlə tanış olun</h2>
             </div>
             {% if projects %}
-            <p class="text-sm text-gray-500 sm:text-right">Daha çox layihəni görmək üçün üfiqi olaraq sürüşdürün.</p>
+            <p class="text-sm text-gray-500 sm:text-right">Layihələri görmək üçün sağa-sola sürüşdürün.</p>
             {% endif %}
         </div>
 
         {% if projects %}
-        <div class="projects-carousel mt-10 flex cursor-grab gap-6 overflow-x-auto pb-4" data-projects-carousel>
+        <div class="projects-carousel no-scrollbar" data-projects-carousel>
             {% for project in projects %}
-            <article class="project-card flex-shrink-0 rounded-3xl border border-gray-200 bg-gray-50 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
-                <div class="project-image-wrapper overflow-hidden rounded-t-3xl">
-                    <img src="{{ project.image.url }}" alt="{{ project.name }}" loading="lazy">
+            <article class="project-card">
+                <div class="project-image-wrapper">
+                    {% if project.image %}
+                        <img src="{{ project.image.url }}" alt="{{ project.name }}" loading="lazy">
+                    {% else %}
+                         <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
+                            Resim Yok
+                        </div>
+                    {% endif %}
                 </div>
-                <div class="flex h-full flex-col items-center gap-4 px-6 pb-8 pt-6 text-center">
-                    <h3 class="text-xl font-semibold text-gray-900">{{ project.name }}</h3>
-                    <a href="{{ project.link }}" class="inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-2 text-sm font-medium text-white transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" target="_blank" rel="noopener">Bax</a>
+                <div class="flex flex-col items-center gap-4 px-6 pb-6 pt-6 text-center flex-grow">
+                    <h3 class="text-xl font-semibold text-gray-900 line-clamp-2">{{ project.name }}</h3>
+                    <p class="text-sm text-gray-500 line-clamp-3">{{ project.description|default:"" }}</p>
+                    <a href="{{ project.link }}" class="mt-auto inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-2 text-sm font-medium text-white transition hover:bg-blue-500" target="_blank" rel="noopener">
+                        Bax
+                    </a>
                 </div>
             </article>
             {% endfor %}
@@ -281,10 +246,8 @@ DƏYİŞİKLİK:
             <h2 class="text-3xl font-cal-sans tracking-tight text-gray-900 sm:text-4xl">Mövcud xidmətlərimiz:</h2>
         </div>
 
-        {% comment %} Grid 2 sətirə bölündü. İlk sətir 3 sütunlu, ikinci sətir mərkəzləşdirilmiş 2 sütunlu. {% endcomment %}
         <div class="space-y-10">
             <div class="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3 lg:items-stretch">
-
                 <div class="h-full rounded-lg border border-gray-200 bg-gray-50 p-8 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:bg-white">
                     <h3 class="text-2xl font-cal-sans text-gray-900">Mühasibatlıq xidmətləri</h3>
                     <ul class="mt-4 space-y-2 list-disc pl-5 text-base text-gray-600">
@@ -292,11 +255,10 @@ DƏYİŞİKLİK:
                         <li>Müəssisələr üçün balansın hazırlanması və hesabatların verilməsi.</li>
                         <li>Əmək haqqının hesablanması,</li>
                     </ul>
-                    <a href="#konsultasiya" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                    <a href="#konsultasiya" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500">
                         Ətraflı...
                     </a>
                 </div>
-
                 <div class="h-full rounded-lg border border-gray-200 bg-gray-50 p-8 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:bg-white">
                     <h3 class="text-2xl font-cal-sans text-gray-900">Vergi xidmətləri</h3>
                     <ul class="mt-4 space-y-2 list-disc pl-5 text-base text-gray-600">
@@ -305,18 +267,17 @@ DƏYİŞİKLİK:
                         <li>Bank rekvizitlərinin alınması</li>
                         <li>Kassa aparatlarının qeydiyyatı</li>
                     </ul>
-                    <a href="#konsultasiya" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                    <a href="#konsultasiya" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500">
                         Ətraflı...
                     </a>
                 </div>
-
                 <div class="h-full rounded-lg border border-gray-200 bg-gray-50 p-8 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:bg-white">
                     <h3 class="text-2xl font-cal-sans text-gray-900">İnsan Resursları</h3>
                     <ul class="mt-4 space-y-2 list-disc pl-5 text-base text-gray-600">
                         <li>Kadr inzibatçılığı və sənədləşməsi sahəsində məlumat və məsləhət xidmətlərinin göstərilməsi</li>
                         <li>Kadr inzibatçılığı sahəsində sənədlərin ekspertizası və rəylərin bildirilməsi</li>
                     </ul>
-                    <a href="#konsultasiya" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                    <a href="#konsultasiya" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500">
                         Ətraflı...
                     </a>
                 </div>
@@ -328,11 +289,10 @@ DƏYİŞİKLİK:
                     <ul class="mt-4 space-y-2 list-disc pl-5 text-base text-gray-600">
                         <li>Şirkətin səhmdarlarının ümumi yığıncaq iclaslarında (il ərzində ən az bir dəfə keçirilir) və Şirkətin Müşahidə Şurasının iclaslarında (il ərzində ən az dörd dəfə keçirilir) iştirak etmək, iştirakçıların iclas gedişində..</li>
                     </ul>
-                    <a href="#konsultasiya" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                    <a href="#konsultasiya" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500">
                         Ətraflı...
                     </a>
                 </div>
-
                 <div class="h-full rounded-lg border border-gray-200 bg-gray-50 p-8 shadow-sm transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:bg-white">
                     <h3 class="text-2xl font-cal-sans text-gray-900">İKT</h3>
                     <ul class="mt-4 space-y-2 list-disc pl-5 text-base text-gray-600">
@@ -340,48 +300,29 @@ DƏYİŞİKLİK:
                         <li>Şirkət daxili internet şəbəkə sisteminin çəkilişi və qurulması.</li>
                         <li>Şirkət daxili analoq telefon sisteminin çəkilişi.</li>
                     </ul>
-                    <a href="#konsultasiya" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                    <a href="#konsultasiya" class="mt-6 inline-block rounded-[2.5rem] bg-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-blue-500">
                         Ətraflı...
                     </a>
                 </div>
             </div>
         </div>
-
     </div>
 </section>
 {% include "partials/konsultasiya.html" with form=form %}
-{% comment %}
-{% endcomment %}
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const carousel = document.querySelector('[data-projects-carousel]');
-        if (!carousel) {
-            return;
-        }
-
-        const onWheel = (event) => {
-            if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) {
-                return;
-            }
-
-            event.preventDefault();
-            carousel.scrollBy({ left: event.deltaY, behavior: 'auto' });
-        };
-
-        carousel.addEventListener('wheel', onWheel, { passive: false });
+        if (!carousel) return;
 
         let isDown = false;
-        let startX = 0;
-        let scrollLeft = 0;
+        let startX;
+        let scrollLeft;
 
-        const startDrag = (event) => {
-            if (event.button !== 0) {
-                return;
-            }
+        const startDrag = (e) => {
             isDown = true;
             carousel.classList.add('is-dragging');
-            startX = event.pageX - carousel.offsetLeft;
+            startX = e.pageX - carousel.offsetLeft;
             scrollLeft = carousel.scrollLeft;
         };
 
@@ -390,23 +331,19 @@ DƏYİŞİKLİK:
             carousel.classList.remove('is-dragging');
         };
 
-        const moveDrag = (event) => {
-            if (!isDown) {
-                return;
-            }
-            event.preventDefault();
-            const x = event.pageX - carousel.offsetLeft;
-            const walk = (x - startX) * 1.2;
+        const moveDrag = (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - carousel.offsetLeft;
+            const walk = (x - startX) * 2; // Hız faktörü
             carousel.scrollLeft = scrollLeft - walk;
         };
 
         carousel.addEventListener('mousedown', startDrag);
-        window.addEventListener('mouseup', stopDrag);
         carousel.addEventListener('mouseleave', stopDrag);
+        window.addEventListener('mouseup', stopDrag);
         carousel.addEventListener('mousemove', moveDrag);
-        carousel.addEventListener('dragstart', (event) => event.preventDefault());
     });
 </script>
 
 {% endblock %}
-
