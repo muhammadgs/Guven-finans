@@ -23,7 +23,7 @@ class KonsultasiyaForm(forms.ModelForm):
         label="Ölkə kodu",
         widget=forms.Select(
             attrs={
-                "class": "block w-full rounded-l-lg border border-gray-300 bg-gray-50 px-3 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "class": "block w-24 flex-shrink-0 rounded-l-lg border border-gray-300 bg-gray-50 px-3 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
             }
         ),
     )
@@ -32,7 +32,7 @@ class KonsultasiyaForm(forms.ModelForm):
         label="Mobil nömrə",
         widget=forms.TextInput(
             attrs={
-                "class": "mt-0 block w-full rounded-r-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
+                "class": "mt-0 block w-full flex-1 rounded-r-lg border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500",
                 "placeholder": "50 123 45 67 (yalnız rəqəm)",
                 "pattern": r"^[0-9\s]+$",
                 "inputmode": "numeric",
