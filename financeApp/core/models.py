@@ -14,6 +14,19 @@ class Project(models.Model):
         return self.name
 
 
+class Partner(models.Model):
+    name = models.CharField(max_length=255)
+    link = models.URLField()
+    image = models.ImageField(upload_to="partners/")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Konsultasiya(models.Model):
     class Xidmetler(models.TextChoices):
         MUHASIBAT = "MUHASIBAT", "Mühasibatlıq"

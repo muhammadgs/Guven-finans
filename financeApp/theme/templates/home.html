@@ -240,6 +240,49 @@
     </div>
 </section>
 
+<section id="partnyorlar" class="bg-white py-16 sm:py-24">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-10">
+            <div>
+                <p class="text-base font-semibold text-blue-600">Partnyorlarımız</p>
+                <h2 class="mt-2 text-3xl font-cal-sans tracking-tight text-gray-900 sm:text-4xl">Əməkdaşlıq etdiyimiz partnyorlarla tanış olun</h2>
+            </div>
+            {% if partners %}
+            <p class="text-sm text-gray-500 sm:text-right">Partnyorları görmək üçün sağa-sola sürüşdürün.</p>
+            {% endif %}
+        </div>
+
+        {% if partners %}
+        <div class="projects-carousel no-scrollbar" data-projects-carousel>
+            {% for partner in partners %}
+            <article class="project-card">
+                <div class="project-image-wrapper">
+                    {% if partner.image %}
+                        <img src="{{ partner.image.url }}" alt="{{ partner.name }}" loading="lazy">
+                    {% else %}
+                         <div class="w-full h-full bg-gray-200 flex items-center justify-center text-gray-500">
+                            Resim Yok
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="flex flex-col items-center gap-4 px-6 pb-6 pt-6 text-center flex-grow">
+                    <h3 class="text-xl font-semibold text-gray-900 line-clamp-2">{{ partner.name }}</h3>
+                    <p class="text-sm text-gray-500 line-clamp-3">{{ partner.description|default:"" }}</p>
+                    <a href="{{ partner.link }}" class="mt-auto inline-flex items-center justify-center rounded-full bg-blue-600 px-6 py-2 text-sm font-medium text-white transition hover:bg-blue-500" target="_blank" rel="noopener">
+                        Bax
+                    </a>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="mt-8 rounded-3xl border border-dashed border-gray-300 bg-gray-50 px-6 py-12 text-center text-gray-500">
+            <p>Hazırda təqdim ediləcək partnyor yoxdur.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
 <section class="bg-white py-16 sm:py-24">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="mb-16">
