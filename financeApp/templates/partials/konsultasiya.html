@@ -33,10 +33,16 @@
                     </div>
 
                     <div class="space-y-2">
-                        <label for="id_elaqe_nomresi" class="block text-sm font-medium text-gray-700">Əlaqə nömrəsi</label>
-                        {{ form.elaqe_nomresi }}
-                        {% if form.elaqe_nomresi.errors %}
-                        <p class="mt-1 text-sm text-red-600">{{ form.elaqe_nomresi.errors|join:" " }}</p>
+                        <label for="{{ form.elaqe_prefix.id_for_label }}" class="block text-sm font-medium text-gray-700">Əlaqə nömrəsi</label>
+                        <div class="mt-1 flex rounded-lg shadow-sm">
+                            {{ form.elaqe_prefix }}
+                            {{ form.elaqe_number }}
+                        </div>
+                        {% if form.elaqe_prefix.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.elaqe_prefix.errors|join:" " }}</p>
+                        {% endif %}
+                        {% if form.elaqe_number.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.elaqe_number.errors|join:" " }}</p>
                         {% endif %}
                     </div>
 
