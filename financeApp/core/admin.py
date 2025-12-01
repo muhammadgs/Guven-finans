@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Konsultasiya, Project
+from .models import Konsultasiya, Partner, Project
 
 
 @admin.register(Konsultasiya)
@@ -12,5 +12,11 @@ class KonsultasiyaAdmin(admin.ModelAdmin):
 
 @admin.register(Project)
 class ProjectAdmin(admin.ModelAdmin):
+    list_display = ("name", "link", "created_at")
+    search_fields = ("name", "link")
+
+
+@admin.register(Partner)
+class PartnerAdmin(admin.ModelAdmin):
     list_display = ("name", "link", "created_at")
     search_fields = ("name", "link")

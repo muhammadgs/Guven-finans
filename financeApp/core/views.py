@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views.generic.edit import FormView
 
 from .forms import KonsultasiyaForm
-from .models import Project
+from .models import Partner, Project
 
 
 def _home_context(form: KonsultasiyaForm | None = None) -> dict:
@@ -56,12 +56,14 @@ def _home_context(form: KonsultasiyaForm | None = None) -> dict:
     ]
 
     projects = Project.objects.all()
+    partners = Partner.objects.all()
 
     return {
         "stats": stats,
         "services": services,
         "form": form or KonsultasiyaForm(),
         "projects": projects,
+        "partners": partners,
     }
 
 
