@@ -32,28 +32,54 @@
         <form class="space-y-6" action="{% url 'login' %}" method="POST">
             {% csrf_token %}
 
+            {% if form.non_field_errors %}
+                <div class="rounded-md bg-red-100 p-4 mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <h3 class="text-sm font-medium text-red-800">Giriş zamanı xəta baş verdi:</h3>
+                            <div class="mt-2 text-sm text-red-700">
+                                <ul role="list" class="list-disc pl-5 space-y-1">
+                                    {% for error in form.non_field_errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
             <div>
-                <label for="id_username" class="block text-sm font-medium leading-6 text-gray-900">
-                    E-poçt ünvanı
+                <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">
+                    {{ form.username.label }}
                 </label>
                 <div class="mt-2">
-                    <input id="id_username" name="username" type="email" autocomplete="email" required 
-                           class="block w-full rounded-md border-0 py-2.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6">
+                    {{ form.username }}
                 </div>
+                {% if form.username.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.username.errors|join:" " }}</p>
+                {% endif %}
             </div>
 
             <div>
                 <div class="flex items-center justify-between">
-                    <label for="id_password" class="block text-sm font-medium leading-6 text-gray-900">
-                        Şifrə
+                    <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">
+                        {{ form.password.label }}
                     </label>
                     <div class="text-sm">
                         </div>
                 </div>
                 <div class="mt-2">
-                    <input id="id_password" name="password" type="password" autocomplete="current-password" required 
-                           class="block w-full rounded-md border-0 py-2.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6">
+                    {{ form.password }}
                 </div>
+                {% if form.password.errors %}
+                    <p class="mt-1 text-sm text-red-600">{{ form.password.errors|join:" " }}</p>
+                {% endif %}
             </div>
 
             <div>
