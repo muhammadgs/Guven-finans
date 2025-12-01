@@ -1,5 +1,4 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm # Django-nun hazır login forması
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import messages
@@ -10,7 +9,7 @@ from django.urls import reverse
 
 from typing import Optional
 
-from .forms import EmployeeForm, OwnerRegistrationForm, WorkerRegistrationForm
+from .forms import EmployeeForm, OwnerRegistrationForm, UserLoginForm, WorkerRegistrationForm
 from .models import OwnerRegistration, WorkerRegistration
 
 
@@ -208,9 +207,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
         return redirect(_resolve_dashboard_url_name(request.user))
 
     if request.method == "POST":
-        # Django-nun daxili AuthenticationForm-u istifadə edirik.
-        # Bu forma "username" (biz email istifadə edirik) və "password" sahələrini yoxlayır.
-        form = AuthenticationForm(request, data=request.POST)
+        form = UserLoginForm(request, data=request.POST)
 
         if form.is_valid():
             # Məlumatlar düzgündürsə...
@@ -244,7 +241,7 @@ def login_view(request: HttpRequest) -> HttpResponse:
 
     else:
         # GET sorğusu olarsa, boş login forması göstər
-        form = AuthenticationForm()
+        form = UserLoginForm()
 
     return render(request, "accounts/login.html", {"form": form})
 

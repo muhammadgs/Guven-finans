@@ -1,5 +1,6 @@
 import re
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 from django.db import transaction
 from django.contrib.auth.models import User
 from .models import OwnerRegistration, WorkerRegistration
@@ -94,6 +95,14 @@ class OwnerRegistrationForm(forms.ModelForm):
             "first_name", "last_name", "email",
             "company_name", "company_email", "company_address",
         ]
+        labels = {
+            "first_name": "Ad",
+            "last_name": "Soyad",
+            "email": "E-poçt",
+            "company_name": "Şirkət adı",
+            "company_email": "Şirkət E-poçtu",
+            "company_address": "Şirkət Ünvanı",
+        }
         # Widget-lər (sizin kodunuzdakı kimi qalır)
         widgets = {
             "first_name": forms.TextInput(attrs={
@@ -222,6 +231,12 @@ class EmployeeForm(forms.ModelForm):
     class Meta:
         model = WorkerRegistration
         fields = ["first_name", "last_name", "phone", "email", "position"]
+        labels = {
+            "first_name": "Ad",
+            "last_name": "Soyad",
+            "email": "E-poçt",
+            "position": "Vəzifə",
+        }
         widgets = {
             "first_name": forms.TextInput(
                 attrs={
@@ -316,6 +331,12 @@ class WorkerRegistrationForm(forms.ModelForm):
     class Meta:
         model = WorkerRegistration
         fields = ["first_name", "last_name", "phone", "email", "position"]
+        labels = {
+            "first_name": "Ad",
+            "last_name": "Soyad",
+            "email": "E-poçt",
+            "position": "Vəzifə",
+        }
         # Widget-lər (sizin kodunuzdakı kimi qalır)
         widgets = {
             "first_name": forms.TextInput(attrs={
@@ -401,3 +422,27 @@ class WorkerRegistrationForm(forms.ModelForm):
             instance.save()
 
         return instance
+
+
+class UserLoginForm(AuthenticationForm):
+    username = forms.CharField(
+        label="E-poçt",
+        widget=forms.TextInput(
+            attrs={
+                "class": "block w-full rounded-md border-0 py-2.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6",
+                "placeholder": "E-poçt ünvanınızı daxil edin",
+                "autocomplete": "email",
+                "type": "email",
+            }
+        ),
+    )
+    password = forms.CharField(
+        label="Şifrə",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "block w-full rounded-md border-0 py-2.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6",
+                "placeholder": "Şifrənizi daxil edin",
+                "autocomplete": "current-password",
+            }
+        ),
+    )
