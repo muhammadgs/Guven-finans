@@ -113,6 +113,9 @@
     font-variation-settings: var(--default-font-variation-settings, normal);
     -webkit-tap-highlight-color: transparent;
   }
+  html {
+    scroll-behavior: smooth !important;
+  }
   hr {
     height: 0;
     color: inherit;
