@@ -20,6 +20,10 @@
     <link href="https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/public/web/cal-sans.css" rel="stylesheet">
 
     <style>
+        html {
+            scroll-behavior: smooth !important;
+            scroll-padding-top: var(--header-offset);
+        }
         :root {
             --header-offset: 9.5rem;
         }
@@ -205,13 +209,30 @@
             </div>
 
             <div class="flex-1 hidden md:flex items-center justify-center gap-8 text-base font-poppins-light pl-10">
-                <a href="{% url 'home' %}#hero-section" class="nav-link active-link text-white transition-colors duration-300">Ana Səhifə</a>
-                <a href="{% url 'home' %}#biz-kimik" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Biz kimik</a>
-                <a href="{% url 'home' %}#niye-biz" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Niyə biz?</a>
-                <a href="{% url 'home' %}#xidmetler" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Xidmətlər</a>
-                <a href="{% url 'home' %}#layiheler" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Layihələr</a>
-                <a href="{% url 'home' %}#partnyorlar" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Partnyorlar</a>
-                <a href="{% url 'home' %}#konsultasiya" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Konsultasiya</a>
+
+                {% url 'home' as home_url %}
+
+                <a href="{% if request.path == home_url %}#hero-section{% else %}{{ home_url }}#hero-section{% endif %}"
+                   class="nav-link active-link text-white transition-colors duration-300">Ana Səhifə</a>
+
+                <a href="{% if request.path == home_url %}#biz-kimik{% else %}{{ home_url }}#biz-kimik{% endif %}"
+                   class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Biz kimik</a>
+
+                <a href="{% if request.path == home_url %}#niye-biz{% else %}{{ home_url }}#niye-biz{% endif %}"
+                   class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Niyə biz?</a>
+
+                <a href="{% if request.path == home_url %}#xidmetler{% else %}{{ home_url }}#xidmetler{% endif %}"
+                   class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Xidmətlər</a>
+
+                <a href="{% if request.path == home_url %}#layiheler{% else %}{{ home_url }}#layiheler{% endif %}"
+                   class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Layihələr</a>
+
+                <a href="{% if request.path == home_url %}#partnyorlar{% else %}{{ home_url }}#partnyorlar{% endif %}"
+                   class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Partnyorlar</a>
+
+                <a href="{% if request.path == home_url %}#konsultasiya{% else %}{{ home_url }}#konsultasiya{% endif %}"
+                   class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Konsultasiya</a>
+
             </div>
 
             <div class="flex-shrink-0 flex items-center gap-3 pr-12">
@@ -344,24 +365,11 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const header = document.getElementById('main-header');
-            if (!header || header.classList.contains('no-scroll-effect')) {
-                return;
-            }
+    document.addEventListener('DOMContentLoaded', () => {
+        const header = document.getElementById('main-header');
 
-            const phoneLink = document.getElementById('header-phone-link');
-            if (phoneLink) {
-                phoneLink.addEventListener('click', (event) => {
-                    event.preventDefault();
-
-                    const shouldCall = confirm('Hörmətli istifadəçi, bu nömrəyə zəng etmək istəyirsiniz?');
-                    if (shouldCall) {
-                        window.location.href = phoneLink.getAttribute('href');
-                    }
-                });
-            }
-
+        // Header rəng dəyişmə effekti
+        if (header && !header.classList.contains('no-scroll-effect')) {
             const updateHeaderState = () => {
                 if (window.scrollY > 10) {
                     header.classList.add('header-scrolled');
@@ -369,46 +377,20 @@
                     header.classList.remove('header-scrolled');
                 }
             };
-
             updateHeaderState();
             window.addEventListener('scroll', updateHeaderState, { passive: true });
+        }
 
-            const normalizePath = (path) => {
-                const trimmed = path.replace(/\/+$/, '');
-                return trimmed || '/';
-            };
-
-            const getHeaderHeight = () => header?.offsetHeight || 0;
-
-            const handleSmoothScroll = (event) => {
-                const link = event.currentTarget;
-                const href = link.getAttribute('href');
-                if (!href) return;
-
-                const targetUrl = new URL(href, window.location.href);
-                if (!targetUrl.hash || targetUrl.hash === '#') return;
-
-                const sameOrigin = targetUrl.origin === window.location.origin;
-                const samePath = normalizePath(targetUrl.pathname) === normalizePath(window.location.pathname);
-                if (!(sameOrigin && samePath)) return;
-
-                const targetElement = document.querySelector(targetUrl.hash);
-                if (!targetElement) return;
-
-                event.preventDefault();
-
-                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-                const offsetPosition = Math.max(targetPosition - getHeaderHeight(), 0);
-
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            };
-
-            const anchorLinks = document.querySelectorAll('a[href*="#"]');
-            anchorLinks.forEach((link) => link.addEventListener('click', handleSmoothScroll));
-        });
-    </script>
+        // Telefon linki təsdiqi
+        const phoneLink = document.getElementById('header-phone-link');
+        if (phoneLink) {
+            phoneLink.addEventListener('click', (e) => {
+                if (!confirm('Hörmətli istifadəçi, bu nömrəyə zəng etmək istəyirsiniz?')) {
+                    e.preventDefault();
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>
