@@ -19,11 +19,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/public/web/cal-sans.css" rel="stylesheet">
 
-     <style>
-        html {
-            scroll-behavior: smooth;
-        }
-
+    <style>
         :root {
             --header-offset: 9.5rem;
         }
@@ -377,59 +373,42 @@
             updateHeaderState();
             window.addEventListener('scroll', updateHeaderState, { passive: true });
 
-            const nav = document.querySelector('header nav');
-            if (!nav) return;
+            const normalizePath = (path) => {
+                const trimmed = path.replace(/\/+$/, '');
+                return trimmed || '/';
+            };
 
-            const navLinks = nav.querySelectorAll('a[href*="#"]');
+            const getHeaderHeight = () => header?.offsetHeight || 0;
 
-            navLinks.forEach((link) => {
+            const handleSmoothScroll = (event) => {
+                const link = event.currentTarget;
                 const href = link.getAttribute('href');
-                if (!href || href === '#') return;
+                if (!href) return;
 
-                link.addEventListener('click', (event) => {
-                    const targetUrl = new URL(href, window.location.href);
-                    if (!targetUrl.hash) return;
+                const targetUrl = new URL(href, window.location.href);
+                if (!targetUrl.hash || targetUrl.hash === '#') return;
 
-                    const isSamePage = targetUrl.pathname === window.location.pathname;
-                    if (!isSamePage) return;
+                const sameOrigin = targetUrl.origin === window.location.origin;
+                const samePath = normalizePath(targetUrl.pathname) === normalizePath(window.location.pathname);
+                if (!(sameOrigin && samePath)) return;
 
-                    const targetElement = document.querySelector(targetUrl.hash);
-                    if (!targetElement) return;
+                const targetElement = document.querySelector(targetUrl.hash);
+                if (!targetElement) return;
 
-                    event.preventDefault();
+                event.preventDefault();
 
-                    const headerHeight = header.offsetHeight || 0;
-                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-                    const offsetPosition = targetPosition - headerHeight;
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = Math.max(targetPosition - getHeaderHeight(), 0);
 
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
                 });
+            };
+
+            const anchorLinks = document.querySelectorAll('a[href*="#"]');
+            anchorLinks.forEach((link) => link.addEventListener('click', handleSmoothScroll));
         });
-
-        document.addEventListener('click', (event) => {
-            const anchor = event.target.closest('a[href^="#"]');
-            if (!anchor) return;
-
-            event.preventDefault();
-
-            const targetId = anchor.getAttribute('href').substring(1);
-            if (!targetId) return;
-
-            const targetElement = document.getElementById(targetId);
-            if (!targetElement) return;
-
-            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-            const offsetPosition = targetPosition - 100;
-
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-            });
-        });
-    });
     </script>
 </body>
 </html>
