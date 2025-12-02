@@ -407,8 +407,29 @@
                         behavior: 'smooth'
                     });
                 });
+        });
+
+        document.addEventListener('click', (event) => {
+            const anchor = event.target.closest('a[href^="#"]');
+            if (!anchor) return;
+
+            event.preventDefault();
+
+            const targetId = anchor.getAttribute('href').substring(1);
+            if (!targetId) return;
+
+            const targetElement = document.getElementById(targetId);
+            if (!targetElement) return;
+
+            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = targetPosition - 100;
+
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
             });
         });
+    });
     </script>
 </body>
 </html>
