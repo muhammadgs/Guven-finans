@@ -213,24 +213,31 @@
                 {% url 'home' as home_url %}
 
                 <a href="{% if request.path == home_url %}#hero-section{% else %}{{ home_url }}#hero-section{% endif %}"
+                   data-scroll-target="hero-section"
                    class="nav-link active-link text-white transition-colors duration-300">Ana Səhifə</a>
 
                 <a href="{% if request.path == home_url %}#biz-kimik{% else %}{{ home_url }}#biz-kimik{% endif %}"
+                   data-scroll-target="biz-kimik"
                    class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Biz kimik</a>
 
                 <a href="{% if request.path == home_url %}#niye-biz{% else %}{{ home_url }}#niye-biz{% endif %}"
+                   data-scroll-target="niye-biz"
                    class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Niyə biz?</a>
 
                 <a href="{% if request.path == home_url %}#xidmetler{% else %}{{ home_url }}#xidmetler{% endif %}"
+                   data-scroll-target="xidmetler"
                    class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Xidmətlər</a>
 
                 <a href="{% if request.path == home_url %}#layiheler{% else %}{{ home_url }}#layiheler{% endif %}"
+                   data-scroll-target="layiheler"
                    class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Layihələr</a>
 
                 <a href="{% if request.path == home_url %}#partnyorlar{% else %}{{ home_url }}#partnyorlar{% endif %}"
+                   data-scroll-target="partnyorlar"
                    class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Partnyorlar</a>
 
                 <a href="{% if request.path == home_url %}#konsultasiya{% else %}{{ home_url }}#konsultasiya{% endif %}"
+                   data-scroll-target="konsultasiya"
                    class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Konsultasiya</a>
 
             </div>
@@ -390,6 +397,32 @@
                 }
             });
         }
+
+        // Naviqasiya linkləri üçün hamar sürüşdürmə
+        const scrollLinks = document.querySelectorAll('a[data-scroll-target]');
+        const headerOffset = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-offset')) || 0;
+
+        const scrollToSection = (targetId) => {
+            const target = document.getElementById(targetId);
+            if (!target) return false;
+
+            const targetPosition = target.getBoundingClientRect().top + window.scrollY - headerOffset;
+            window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            return true;
+        };
+
+        scrollLinks.forEach((link) => {
+            link.addEventListener('click', (event) => {
+                const targetId = link.getAttribute('data-scroll-target');
+                if (!targetId) return;
+
+                const didScroll = scrollToSection(targetId);
+                if (didScroll) {
+                    event.preventDefault();
+                    link.blur();
+                }
+            });
+        });
     });
 </script>
 </body>
