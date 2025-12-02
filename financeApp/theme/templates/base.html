@@ -376,6 +376,27 @@
 
             updateHeaderState();
             window.addEventListener('scroll', updateHeaderState, { passive: true });
+
+            document.addEventListener('click', (event) => {
+                const anchor = event.target.closest('a[href^="#"]');
+                if (!anchor) return;
+
+                const href = anchor.getAttribute('href');
+                if (!href || href === '#') return;
+
+                event.preventDefault();
+
+                const targetElement = document.querySelector(href);
+                if (!targetElement) return;
+
+                const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = targetPosition - 100;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            });
         });
     </script>
 </body>
