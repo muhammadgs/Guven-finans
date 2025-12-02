@@ -20,6 +20,10 @@
     <link href="https://cdn.jsdelivr.net/npm/cal-sans@1.0.1/public/web/cal-sans.css" rel="stylesheet">
 
      <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
         :root {
             --header-offset: 9.5rem;
         }
@@ -205,12 +209,13 @@
             </div>
 
             <div class="flex-1 hidden md:flex items-center justify-center gap-8 text-base font-poppins-light pl-10">
-                <a href="/" class="nav-link active-link text-white transition-colors duration-300">Ana Səhifə</a>
-                <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Xidmətlər</a>
-                <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Komanda</a>
-                <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Biz Kimik?</a>
-                <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Bloqlar</a>
-                <a href="#" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Yazarlar</a>
+                <a href="{% url 'home' %}#hero-section" class="nav-link active-link text-white transition-colors duration-300">Ana Səhifə</a>
+                <a href="{% url 'home' %}#biz-kimik" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Biz kimik</a>
+                <a href="{% url 'home' %}#niye-biz" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Niyə biz?</a>
+                <a href="{% url 'home' %}#xidmetler" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Xidmətlər</a>
+                <a href="{% url 'home' %}#layiheler" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Layihələr</a>
+                <a href="{% url 'home' %}#partnyorlar" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Partnyorlar</a>
+                <a href="{% url 'home' %}#konsultasiya" class="nav-link text-white hover:text-blue-300 transition-colors duration-300">Konsultasiya</a>
             </div>
 
             <div class="flex-shrink-0 flex items-center gap-3 pr-12">
