@@ -169,8 +169,8 @@
                 <a href="mailto:info@guvenfinans.az" class="nav-link flex items-center gap-2 hover:text-blue-300">
                     <i class="fas fa-envelope"></i> info@guvenfinans.az
                 </a>
-                <a href="tel:+994513210989" class="nav-link hidden sm:flex items-center gap-2 hover:text-blue-300">
-                    <i class="fas fa-phone-alt"></i> (+994) 51 321 0989
+                <a id="header-phone-link" href="tel:+994557636993" class="nav-link hidden sm:flex items-center gap-2 hover:text-blue-300">
+                    <i class="fas fa-phone-alt"></i> +994 55 763 69 93
                 </a>
             </div>
 
@@ -347,6 +347,18 @@
             const header = document.getElementById('main-header');
             if (!header || header.classList.contains('no-scroll-effect')) {
                 return;
+            }
+
+            const phoneLink = document.getElementById('header-phone-link');
+            if (phoneLink) {
+                phoneLink.addEventListener('click', (event) => {
+                    event.preventDefault();
+
+                    const shouldCall = confirm('Hörmətli istifadəçi, bu nömrəyə zəng etmək istəyirsiniz?');
+                    if (shouldCall) {
+                        window.location.href = phoneLink.getAttribute('href');
+                    }
+                });
             }
 
             const updateHeaderState = () => {
