@@ -376,6 +376,38 @@
 
             updateHeaderState();
             window.addEventListener('scroll', updateHeaderState, { passive: true });
+
+            const nav = document.querySelector('header nav');
+            if (!nav) return;
+
+            const navLinks = nav.querySelectorAll('a[href*="#"]');
+
+            navLinks.forEach((link) => {
+                const href = link.getAttribute('href');
+                if (!href || href === '#') return;
+
+                link.addEventListener('click', (event) => {
+                    const targetUrl = new URL(href, window.location.href);
+                    if (!targetUrl.hash) return;
+
+                    const isSamePage = targetUrl.pathname === window.location.pathname;
+                    if (!isSamePage) return;
+
+                    const targetElement = document.querySelector(targetUrl.hash);
+                    if (!targetElement) return;
+
+                    event.preventDefault();
+
+                    const headerHeight = header.offsetHeight || 0;
+                    const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+                    const offsetPosition = targetPosition - headerHeight;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                });
+            });
         });
     </script>
 </body>
