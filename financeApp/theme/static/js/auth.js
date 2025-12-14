@@ -9,7 +9,7 @@ const AUTH_ENDPOINTS = {
 };
 
 const WORKER_ENDPOINTS = {
-    verifyCompany: `${API_BASE_URL}${API_VERSION}/companies/`,
+    verifyCompany: `${API_BASE_URL}${API_VERSION}/companies/verify`,
     register: `${API_BASE_URL}${API_VERSION}/workers/register`,
 };
 
