@@ -247,7 +247,7 @@
                         <a href="{% url 'owner-dashboard' %}" id="dashboard-btn" class="font-cal-sans hidden sm:inline-block rounded-full border px-5 py-2.5 text-sm transition-all duration-300">
                             Panelim
                         </a>
-                        <a href="{% url 'logout' %}" id="logout-btn" class="font-cal-sans hidden sm:inline-block rounded-full bg-red-600 px-5 py-2.5 text-sm text-white shadow-sm transition-all duration-300 hover:bg-red-700">
+                        <a href="{% url 'logout' %}" id="logout-btn" data-api-logout-btn class="font-cal-sans hidden sm:inline-block rounded-full bg-red-600 px-5 py-2.5 text-sm text-white shadow-sm transition-all duration-300 hover:bg-red-700">
                             Çıxış
                         </a>
                     {% else %}
@@ -264,6 +264,7 @@
     </header>
 
     <main id="main">
+        <div data-api-status class="mt-6 hidden"></div>
         {% if messages %}
             <div class="mx-auto mt-28 max-w-4xl px-4 sm:px-6 lg:px-8">
                 {% for message in messages %}
@@ -370,6 +371,7 @@
     {% comment %}
     {% endcomment %}
 
+    <script src="{% static 'js/auth.js' %}"></script>
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
