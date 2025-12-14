@@ -196,7 +196,7 @@ const handleMe = (button) => {
     });
 };
 
-const initWorkerRegistration = () => {
+const initEmployeeRegistration = () => {
     const form = document.querySelector('[data-worker-registration]');
     if (!form) return;
 
@@ -249,12 +249,22 @@ const initWorkerRegistration = () => {
 
         setCompanyStatus('Şirkət kodu yoxlanılır...', 'info');
         try {
-            await apiRequest(`${EMPLOYEE_ENDPOINTS.companies}/${encodeURIComponent(code)}`, {
+            const response = await fetch(`${EMPLOYEE_ENDPOINTS.companies}/${encodeURIComponent(code)}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Şirkət tapılmadı.');
+                }
+
+                const data = await response.json().catch(() => ({}));
+                throw new Error(parseErrorMessage(data));
+            }
+
             companyVerified = true;
             toggleFieldsVisibility(true);
             submitButton?.removeAttribute('disabled');
@@ -332,7 +342,7 @@ const initAuthHandlers = () => {
     if (logoutButton) handleLogout(logoutButton);
     if (refreshButton) handleRefresh(refreshButton);
     if (meButton) handleMe(meButton);
-    initWorkerRegistration();
+    initEmployeeRegistration();
 };
 
 document.addEventListener('DOMContentLoaded', initAuthHandlers);
