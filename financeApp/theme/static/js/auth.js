@@ -8,6 +8,11 @@ const AUTH_ENDPOINTS = {
     me: `${API_BASE_URL}${API_VERSION}/auth/me`,
 };
 
+const WORKER_ENDPOINTS = {
+    verifyCompany: `${API_BASE_URL}${API_VERSION}/companies/verify`,
+    register: `${API_BASE_URL}${API_VERSION}/workers/register`,
+};
+
 const STORAGE_KEYS = {
     access: 'gf_access_token',
     refresh: 'gf_refresh_token',
@@ -187,6 +192,129 @@ const handleMe = (button) => {
     });
 };
 
+const initWorkerRegistration = () => {
+    const form = document.querySelector('[data-worker-registration]');
+    if (!form) return;
+
+    const companyInput = form.querySelector('[data-company-code-input]');
+    const verifyButton = form.querySelector('[data-company-verify-btn]');
+    const fieldsWrapper = form.querySelector('[data-company-fields]');
+    const companyStatus = form.querySelector('[data-company-status]');
+    const submitButton = form.querySelector('[data-worker-submit]');
+    const successRedirect = form.dataset.successRedirect;
+
+    let companyVerified = false;
+
+    const toggleFieldsVisibility = (visible) => {
+        if (!fieldsWrapper) return;
+        fieldsWrapper.classList.toggle('hidden', !visible);
+        if (visible) {
+            fieldsWrapper.classList.remove('opacity-0');
+            fieldsWrapper.classList.add('opacity-100');
+        } else {
+            fieldsWrapper.classList.remove('opacity-100');
+            fieldsWrapper.classList.add('opacity-0');
+        }
+    };
+
+    const setCompanyStatus = (message, status = 'info') => {
+        if (!companyStatus) return;
+        const statusClasses = {
+            success: 'border-green-200 bg-green-50 text-green-800',
+            error: 'border-red-200 bg-red-50 text-red-800',
+            info: 'border-blue-200 bg-blue-50 text-blue-800',
+        };
+        companyStatus.className = `rounded-xl border px-4 py-3 text-sm ${statusClasses[status] || statusClasses.info}`;
+        companyStatus.textContent = message;
+        companyStatus.classList.remove('hidden');
+    };
+
+    const resetFormState = () => {
+        companyVerified = false;
+        toggleFieldsVisibility(false);
+        submitButton?.setAttribute('disabled', 'true');
+    };
+
+    const verifyCompanyCode = async () => {
+        const code = companyInput?.value?.trim();
+        if (!code) {
+            setCompanyStatus('Zəhmət olmasa şirkət kodunu daxil edin.', 'error');
+            resetFormState();
+            return;
+        }
+
+        setCompanyStatus('Şirkət kodu yoxlanılır...', 'info');
+        try {
+            await apiRequest(`${WORKER_ENDPOINTS.verifyCompany}?code=${encodeURIComponent(code)}`, {
+                method: 'GET',
+            });
+            companyVerified = true;
+            toggleFieldsVisibility(true);
+            submitButton?.removeAttribute('disabled');
+            setCompanyStatus('Şirkət kodu təsdiqləndi. Qeydiyyat məlumatlarını doldurun.', 'success');
+        } catch (error) {
+            setCompanyStatus(error.message || 'Şirkət kodu tapılmadı.', 'error');
+            resetFormState();
+        }
+    };
+
+    verifyButton?.addEventListener('click', verifyCompanyCode);
+    companyInput?.addEventListener('input', () => {
+        companyStatus?.classList.add('hidden');
+        resetFormState();
+    });
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!companyVerified) {
+            setCompanyStatus('Zəhmət olmasa əvvəl şirkət kodunu təsdiqləyin.', 'error');
+            return;
+        }
+
+        const formData = new FormData(form);
+        const password = formData.get('password');
+        const confirmPassword = formData.get('confirm_password');
+
+        if (password !== confirmPassword) {
+            updateStatus('Şifrələr uyğun gəlmir.', 'error');
+            return;
+        }
+
+        const payload = {
+            company_code: formData.get('company_code'),
+            first_name: formData.get('first_name'),
+            last_name: formData.get('last_name'),
+            father_name: formData.get('father_name'),
+            fin_code: formData.get('fin_code'),
+            phone_number: formData.get('phone_number'),
+            email: formData.get('email'),
+            password,
+        };
+
+        submitButton?.setAttribute('disabled', 'true');
+        updateStatus('Qeydiyyat göndərilir...', 'info');
+
+        try {
+            await apiRequest(WORKER_ENDPOINTS.register, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            updateStatus('Qeydiyyat uğurla tamamlandı. Yönləndirilirsiniz...', 'success');
+            const redirectUrl = successRedirect || '/accounts/login/';
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 800);
+        } catch (error) {
+            updateStatus(error.message || 'Qeydiyyat zamanı xəta baş verdi.', 'error');
+            submitButton?.removeAttribute('disabled');
+        }
+    });
+};
+
 const initAuthHandlers = () => {
     const loginForm = document.querySelector('[data-api-login-form]');
     const logoutButton = document.querySelector('[data-api-logout-btn]');
@@ -197,6 +325,7 @@ const initAuthHandlers = () => {
     if (logoutButton) handleLogout(logoutButton);
     if (refreshButton) handleRefresh(refreshButton);
     if (meButton) handleMe(meButton);
+    initWorkerRegistration();
 };
 
 document.addEventListener('DOMContentLoaded', initAuthHandlers);
