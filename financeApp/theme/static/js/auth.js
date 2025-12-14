@@ -8,9 +8,9 @@ const AUTH_ENDPOINTS = {
     me: `${API_BASE_URL}${API_VERSION}/auth/me`,
 };
 
-const WORKER_ENDPOINTS = {
-    verifyCompany: `${API_BASE_URL}${API_VERSION}/companies/verify`,
-    register: `${API_BASE_URL}${API_VERSION}/workers/register`,
+const EMPLOYEE_ENDPOINTS = {
+    companies: `${API_BASE_URL}${API_VERSION}/companies`,
+    register: `${API_BASE_URL}${API_VERSION}/employees`,
 };
 
 const STORAGE_KEYS = {
@@ -77,27 +77,31 @@ const handleLogin = (form) => {
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
         const formData = new FormData(form);
-        const payload = {
-            username: formData.get('username'),
-            password: formData.get('password'),
-        };
 
         updateStatus('Giriş sorğusu göndərilir...', 'info');
 
         try {
+            const email = formData.get('email') || formData.get('username');
             const data = await apiRequest(AUTH_ENDPOINTS.login, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(payload),
+                body: JSON.stringify({
+                    email,
+                    password: formData.get('password'),
+                }),
             });
 
             const accessToken = data.access || data.access_token || data.token;
             const refreshToken = data.refresh || data.refresh_token;
             storeTokens(accessToken, refreshToken);
 
-            updateStatus('Giriş uğurla tamamlandı.', 'success');
+            updateStatus('Giriş uğurla tamamlandı. Yönləndirilirsiniz...', 'success');
+            const redirectUrl = form.dataset.successRedirect || '/dashboard/';
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 500);
         } catch (error) {
             updateStatus(error.message || 'Giriş zamanı xəta baş verdi.', 'error');
         }
@@ -192,7 +196,7 @@ const handleMe = (button) => {
     });
 };
 
-const initWorkerRegistration = () => {
+const initEmployeeRegistration = () => {
     const form = document.querySelector('[data-worker-registration]');
     if (!form) return;
 
@@ -245,9 +249,22 @@ const initWorkerRegistration = () => {
 
         setCompanyStatus('Şirkət kodu yoxlanılır...', 'info');
         try {
-            await apiRequest(`${WORKER_ENDPOINTS.verifyCompany}?code=${encodeURIComponent(code)}`, {
+            const response = await fetch(`${EMPLOYEE_ENDPOINTS.companies}/${encodeURIComponent(code)}`, {
                 method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Şirkət tapılmadı.');
+                }
+
+                const data = await response.json().catch(() => ({}));
+                throw new Error(parseErrorMessage(data));
+            }
+
             companyVerified = true;
             toggleFieldsVisibility(true);
             submitButton?.removeAttribute('disabled');
@@ -295,7 +312,7 @@ const initWorkerRegistration = () => {
         updateStatus('Qeydiyyat göndərilir...', 'info');
 
         try {
-            await apiRequest(WORKER_ENDPOINTS.register, {
+            await apiRequest(EMPLOYEE_ENDPOINTS.register, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -325,7 +342,7 @@ const initAuthHandlers = () => {
     if (logoutButton) handleLogout(logoutButton);
     if (refreshButton) handleRefresh(refreshButton);
     if (meButton) handleMe(meButton);
-    initWorkerRegistration();
+    initEmployeeRegistration();
 };
 
 document.addEventListener('DOMContentLoaded', initAuthHandlers);
