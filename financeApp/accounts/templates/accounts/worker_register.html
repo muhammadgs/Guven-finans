@@ -14,91 +14,137 @@
                 <p class="mt-2 text-base text-gray-600">Zəhmət olmasa məlumatlarınızı daxil edin.</p>
             </div>
 
-            {% if messages %}
-                <div class="mb-6 space-y-3">
-                    {% for message in messages %}
-                        {% if "success" in message.tags %}
-                            <div class="rounded-lg border border-green-100 bg-green-50 px-4 py-3 text-sm text-green-700">
-                                {{ message }}
-                            </div>
-                        {% else %}
-                            <div class="rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
-                                {{ message }}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            {% if form.non_field_errors %}
-                <div class="mb-6 rounded-lg border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
-                    {% for error in form.non_field_errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            <form method="post" class="space-y-6">
+            <form class="space-y-8" data-worker-registration data-success-redirect="{% url 'login' %}">
                 {% csrf_token %}
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div>
-                        <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-cal-sans text-gray-700">Ad</label>
-                        {{ form.first_name }}
-                        {% if form.first_name.errors %}
-                            <p class="mt-2 text-sm text-red-600">{{ form.first_name.errors|join:" " }}</p>
-                        {% endif %}
+
+                <div class="space-y-3">
+                    <label for="company_code" class="block text-sm font-cal-sans text-gray-700">Şirkət Kodu</label>
+                    <div class="flex flex-col gap-3 sm:flex-row">
+                        <input
+                            type="text"
+                            id="company_code"
+                            name="company_code"
+                            required
+                            placeholder="Məs: GF-2024"
+                            class="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                            data-company-code-input
+                        >
+                        <button
+                            type="button"
+                            class="inline-flex w-full items-center justify-center rounded-2xl bg-blue-600 px-5 py-3 text-sm font-cal-sans text-white shadow-lg shadow-blue-200 transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 sm:w-auto"
+                            data-company-verify-btn
+                        >
+                            Kodu yoxla
+                        </button>
                     </div>
-                    <div>
-                        <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-cal-sans text-gray-700">Soyad</label>
-                        {{ form.last_name }}
-                        {% if form.last_name.errors %}
-                            <p class="mt-2 text-sm text-red-600">{{ form.last_name.errors|join:" " }}</p>
-                        {% endif %}
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div class="md:col-span-1">
-                        <label for="{{ form.phone.id_for_label }}" class="block text-sm font-cal-sans text-gray-700">Telefon nömrəsi</label>
-                        {{ form.phone }}
-                        {% if form.phone.errors %}
-                            <p class="mt-2 text-sm text-red-600">{{ form.phone.errors|join:" " }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="md:col-span-1">
-                        <label for="{{ form.email.id_for_label }}" class="block text-sm font-cal-sans text-gray-700">E-poçt</label>
-                        {{ form.email }}
-                        {% if form.email.errors %}
-                            <p class="mt-2 text-sm text-red-600">{{ form.email.errors|join:" " }}</p>
-                        {% endif %}
-                    </div>
-                </div>
-                <div>
-                    <label for="{{ form.position.id_for_label }}" class="block text-sm font-cal-sans text-gray-700">Vəzifə</label>
-                    {{ form.position }}
-                    {% if form.position.errors %}
-                        <p class="mt-2 text-sm text-red-600">{{ form.position.errors|join:" " }}</p>
-                    {% endif %}
+                    <p class="text-sm text-gray-500">Əvvəlcə şirkət kodunu təsdiqləyin. Təsdiqdən sonra digər sahələr açılacaq.</p>
+                    <div class="hidden rounded-xl border px-4 py-3 text-sm" data-company-status></div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <div>
-                        <label for="{{ form.password.id_for_label }}" class="block text-sm font-cal-sans text-gray-700">Şifrə</label>
-                        {{ form.password }}
-                        {% if form.password.errors %}
-                            <p class="mt-2 text-sm text-red-600">{{ form.password.errors|join:" " }}</p>
-                        {% endif %}
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2 hidden opacity-0 transition-opacity duration-300" data-company-fields>
+                    <div class="md:col-span-2 grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <div>
+                            <label for="first_name" class="block text-sm font-cal-sans text-gray-700">Ad</label>
+                            <input
+                                type="text"
+                                id="first_name"
+                                name="first_name"
+                                required
+                                autocomplete="given-name"
+                                class="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                            >
+                        </div>
+                        <div>
+                            <label for="last_name" class="block text-sm font-cal-sans text-gray-700">Soyad</label>
+                            <input
+                                type="text"
+                                id="last_name"
+                                name="last_name"
+                                required
+                                autocomplete="family-name"
+                                class="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                            >
+                        </div>
                     </div>
+
                     <div>
-                        <label for="{{ form.password_confirm.id_for_label }}" class="block text-sm font-cal-sans text-gray-700">Şifrə təkrarı</label>
-                        {{ form.password_confirm }}
-                        {% if form.password_confirm.errors %}
-                            <p class="mt-2 text-sm text-red-600">{{ form.password_confirm.errors|join:" " }}</p>
-                        {% endif %}
+                        <label for="father_name" class="block text-sm font-cal-sans text-gray-700">Ata adı</label>
+                        <input
+                            type="text"
+                            id="father_name"
+                            name="father_name"
+                            required
+                            class="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="fin_code" class="block text-sm font-cal-sans text-gray-700">Fin Kod</label>
+                        <input
+                            type="text"
+                            id="fin_code"
+                            name="fin_code"
+                            required
+                            class="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="phone_number" class="block text-sm font-cal-sans text-gray-700">Telefon nömrəsi</label>
+                        <input
+                            type="tel"
+                            id="phone_number"
+                            name="phone_number"
+                            required
+                            placeholder="+994 XX XXX XX XX"
+                            class="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-cal-sans text-gray-700">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            autocomplete="email"
+                            class="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-cal-sans text-gray-700">Şifrə</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            minlength="8"
+                            class="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="confirm_password" class="block text-sm font-cal-sans text-gray-700">Təkrar Şifrə</label>
+                        <input
+                            type="password"
+                            id="confirm_password"
+                            name="confirm_password"
+                            required
+                            minlength="8"
+                            class="mt-2 w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-900 shadow-sm transition focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                        >
                     </div>
                 </div>
 
                 <div class="flex items-center justify-end">
-                    <button type="submit" class="inline-flex items-center justify-center rounded-[3.5rem] bg-blue-600 px-6 py-3 text-sm font-cal-sans text-white shadow-lg shadow-blue-200 transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                    <button
+                        type="submit"
+                        class="inline-flex items-center justify-center rounded-[3.5rem] bg-blue-600 px-6 py-3 text-sm font-cal-sans text-white shadow-lg shadow-blue-200 transition hover:bg-blue-500 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+                        data-worker-submit
+                        disabled
+                    >
                         Göndər
                     </button>
                 </div>
