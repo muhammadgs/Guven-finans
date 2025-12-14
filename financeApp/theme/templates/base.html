@@ -163,7 +163,7 @@
         }
     </style>
 </head>
-<body class="bg-white text-gray-900 antialiased font-poppins-light">
+<body class="bg-white text-gray-900 antialiased font-poppins-light" data-server-authenticated="{% if user.is_authenticated %}true{% else %}false{% endif %}">
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
 
     <header id="main-header" class="fixed top-0 z-40 w-full transition-all duration-300 {% block header_extra_classes %}{% endblock %}">
@@ -247,6 +247,12 @@
                         <a href="{% url 'owner-dashboard' %}" id="dashboard-btn" class="font-cal-sans hidden sm:inline-block rounded-full border px-5 py-2.5 text-sm transition-all duration-300">
                             Panelim
                         </a>
+                        <button type="button" id="me-btn" class="font-cal-sans hidden sm:inline-block rounded-full border border-blue-600 px-4 py-2 text-sm text-blue-700 transition-all duration-300 hover:bg-blue-50">
+                            Mən
+                        </button>
+                        <button type="button" id="refresh-token-btn" class="font-cal-sans hidden sm:inline-block rounded-full border border-indigo-600 px-4 py-2 text-sm text-indigo-700 transition-all duration-300 hover:bg-indigo-50">
+                            Token yenilə
+                        </button>
                         <a href="{% url 'logout' %}" id="logout-btn" class="font-cal-sans hidden sm:inline-block rounded-full bg-red-600 px-5 py-2.5 text-sm text-white shadow-sm transition-all duration-300 hover:bg-red-700">
                             Çıxış
                         </a>
@@ -256,6 +262,15 @@
                         </a>
                         <a href="{% url 'login' %}" id="login-btn" class="font-cal-sans hidden sm:inline-block rounded-full bg-blue-600 px-5 py-2.5 text-sm text-white shadow-sm transition-all duration-300 hover:bg-blue-700">
                             Giriş et
+                        </a>
+                        <button type="button" id="me-btn" class="font-cal-sans hidden sm:inline-block rounded-full border border-blue-600 px-4 py-2 text-sm text-blue-700 transition-all duration-300 hover:bg-blue-50">
+                            Mən
+                        </button>
+                        <button type="button" id="refresh-token-btn" class="font-cal-sans hidden sm:inline-block rounded-full border border-indigo-600 px-4 py-2 text-sm text-indigo-700 transition-all duration-300 hover:bg-indigo-50">
+                            Token yenilə
+                        </button>
+                        <a href="#" id="logout-btn" class="font-cal-sans hidden sm:inline-block rounded-full bg-red-600 px-5 py-2.5 text-sm text-white shadow-sm transition-all duration-300 hover:bg-red-700">
+                            Çıxış
                         </a>
                     {% endif %}
                 </div>
@@ -283,8 +298,9 @@
     </main>
 
 
-    {% comment %}
-    {% endcomment %}
+    <div id="auth-feedback" class="fixed bottom-4 right-4 z-50 hidden max-w-sm rounded-lg border border-blue-100 bg-white p-4 shadow-lg">
+        <p id="auth-feedback-text" class="text-sm text-gray-800"></p>
+    </div>
     <footer class="text-gray-300" style="background-image: linear-gradient(to bottom, #0E3EA4, #0B1B43);">
         <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -372,6 +388,209 @@
 
 
     <script>
+    const API_BASE_URL = 'http://94.20.153.157:8011';
+    const API_VERSION = '/api/v1';
+    const AUTH_ENDPOINTS = {
+        login: `${API_BASE_URL}${API_VERSION}/auth/login`,
+        refresh: `${API_BASE_URL}${API_VERSION}/auth/refresh`,
+        logout: `${API_BASE_URL}${API_VERSION}/auth/logout`,
+        me: `${API_BASE_URL}${API_VERSION}/auth/me`
+    };
+
+    const authFeedback = document.getElementById('auth-feedback');
+    const authFeedbackText = document.getElementById('auth-feedback-text');
+
+    const authStorage = {
+        saveTokensFromResponse(data) {
+            if (!data || typeof data !== 'object') return;
+            const accessToken = data.access_token || data.access || data.token || data.accessToken;
+            const refreshToken = data.refresh_token || data.refresh || data.refreshToken;
+            if (accessToken) {
+                localStorage.setItem('accessToken', accessToken);
+            }
+            if (refreshToken) {
+                localStorage.setItem('refreshToken', refreshToken);
+            }
+        },
+        clearTokens() {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+        },
+        getAccessToken() {
+            return localStorage.getItem('accessToken');
+        },
+        getRefreshToken() {
+            return localStorage.getItem('refreshToken');
+        }
+    };
+
+    const showAuthMessage = (message, type = 'info') => {
+        if (!authFeedback || !authFeedbackText) return;
+        authFeedbackText.textContent = message;
+        authFeedback.classList.remove('hidden', 'border-red-200', 'border-green-200', 'border-yellow-200');
+        authFeedback.classList.add(type === 'error' ? 'border-red-200' : type === 'success' ? 'border-green-200' : 'border-yellow-200');
+        setTimeout(() => authFeedback.classList.add('hidden'), 4000);
+    };
+
+    const getAuthState = () => {
+        const serverAuthenticated = document.body.dataset.serverAuthenticated === 'true';
+        const hasToken = Boolean(authStorage.getAccessToken());
+        return { isAuthenticated: serverAuthenticated || hasToken, hasToken, serverAuthenticated };
+    };
+
+    const updateAuthButtons = () => {
+        const { isAuthenticated, hasToken } = getAuthState();
+        const loginBtn = document.getElementById('login-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const registerBtn = document.getElementById('register-btn');
+        const refreshBtn = document.getElementById('refresh-token-btn');
+        const meBtn = document.getElementById('me-btn');
+
+        if (loginBtn) {
+            if (hasToken) {
+                loginBtn.classList.add('hidden');
+            } else {
+                loginBtn.classList.remove('hidden');
+            }
+        }
+
+        if (registerBtn) {
+            if (hasToken) {
+                registerBtn.classList.add('hidden');
+            } else {
+                registerBtn.classList.remove('hidden');
+            }
+        }
+
+        if (logoutBtn) {
+            if (isAuthenticated) {
+                logoutBtn.classList.remove('hidden');
+            } else {
+                logoutBtn.classList.add('hidden');
+            }
+        }
+
+        [refreshBtn, meBtn].forEach((btn) => {
+            if (!btn) return;
+            if (hasToken) {
+                btn.classList.remove('hidden');
+            } else {
+                btn.classList.add('hidden');
+            }
+        });
+    };
+
+    const apiFetch = async (url, options = {}) => {
+        const response = await fetch(url, options);
+        const contentType = response.headers.get('content-type') || '';
+        const data = contentType.includes('application/json') ? await response.json().catch(() => ({})) : {};
+        if (!response.ok) {
+            const errorMessage = data.message || data.detail || 'Xəta baş verdi';
+            throw new Error(errorMessage);
+        }
+        return data;
+    };
+
+    const handleLoginSubmit = async (event) => {
+        event.preventDefault();
+        const form = event.target;
+        const username = form.querySelector('input[name="username"]')?.value?.trim();
+        const password = form.querySelector('input[name="password"]')?.value?.trim();
+        if (!username || !password) {
+            showAuthMessage('İstifadəçi adı və şifrəni daxil edin.', 'error');
+            return;
+        }
+
+        try {
+            const data = await apiFetch(AUTH_ENDPOINTS.login, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            });
+            authStorage.saveTokensFromResponse(data);
+            updateAuthButtons();
+            showAuthMessage('Uğurla daxil oldunuz.', 'success');
+            setTimeout(() => window.location.href = '/', 700);
+        } catch (error) {
+            showAuthMessage(error.message || 'Giriş alınmadı.', 'error');
+        }
+    };
+
+    const handleLogout = async (event) => {
+        if (event) event.preventDefault();
+        const token = authStorage.getAccessToken();
+        if (!token) {
+            authStorage.clearTokens();
+            updateAuthButtons();
+            showAuthMessage('Aktiv token tapılmadı.', 'info');
+            return;
+        }
+
+        try {
+            await apiFetch(AUTH_ENDPOINTS.logout, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            authStorage.clearTokens();
+            updateAuthButtons();
+            showAuthMessage('Çıxış tamamlandı.', 'success');
+        } catch (error) {
+            authStorage.clearTokens();
+            updateAuthButtons();
+            showAuthMessage(error.message || 'Çıxış alınmadı.', 'error');
+        }
+    };
+
+    const handleRefresh = async () => {
+        const refreshToken = authStorage.getRefreshToken();
+        if (!refreshToken) {
+            showAuthMessage('Yenilənəcək token tapılmadı.', 'error');
+            return;
+        }
+
+        try {
+            const data = await apiFetch(AUTH_ENDPOINTS.refresh, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ refresh: refreshToken })
+            });
+            authStorage.saveTokensFromResponse(data);
+            updateAuthButtons();
+            showAuthMessage('Token yeniləndi.', 'success');
+        } catch (error) {
+            authStorage.clearTokens();
+            updateAuthButtons();
+            showAuthMessage(error.message || 'Token yenilənmədi.', 'error');
+        }
+    };
+
+    const handleMe = async () => {
+        const token = authStorage.getAccessToken();
+        if (!token) {
+            showAuthMessage('İstifadəçi məlumatı üçün token tapılmadı.', 'error');
+            return;
+        }
+
+        try {
+            const data = await apiFetch(AUTH_ENDPOINTS.me, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const name = data.username || data.full_name || data.email || 'Profil məlumatı alındı';
+            showAuthMessage(`Profil: ${name}`, 'success');
+        } catch (error) {
+            showAuthMessage(error.message || 'Məlumat alınmadı.', 'error');
+        }
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
         const header = document.getElementById('main-header');
 
@@ -423,7 +642,29 @@
                 }
             });
         });
+
+        const loginForm = document.getElementById('api-login-form');
+        if (loginForm) {
+            loginForm.addEventListener('submit', handleLoginSubmit);
+        }
+
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', handleLogout);
+        }
+
+        const refreshBtn = document.getElementById('refresh-token-btn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', handleRefresh);
+        }
+
+        const meBtn = document.getElementById('me-btn');
+        if (meBtn) {
+            meBtn.addEventListener('click', handleMe);
+        }
+
+        updateAuthButtons();
     });
-</script>
+    </script>
 </body>
 </html>
