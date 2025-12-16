@@ -39,9 +39,21 @@
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="phone" class="mb-2 block text-sm font-semibold text-gray-900">Şirkət əlaqə nömrəsi</label>
-                    <input id="phone" name="phone" type="tel" required autocomplete="tel"
-                           class="block w-full h-12 rounded-lg border border-gray-300 px-4 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+                    <label for="phone_prefix" class="mb-2 block text-sm font-semibold text-gray-900">Şirkət əlaqə nömrəsi</label>
+                    <div class="flex gap-3">
+                        <select id="phone_prefix" name="phone_prefix" required
+                                class="h-12 w-24 rounded-lg border border-gray-300 bg-white px-3 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="50">050</option>
+                            <option value="51">051</option>
+                            <option value="55">055</option>
+                            <option value="99">099</option>
+                            <option value="70">070</option>
+                            <option value="77">077</option>
+                        </select>
+                        <input id="phone_number" name="phone_number" type="text" inputmode="numeric" data-digit-length="7" required
+                               class="h-12 w-full rounded-lg border border-gray-300 px-4 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="XXXXXXX" />
+                    </div>
                 </div>
 
                 <div class="sm:col-span-3">

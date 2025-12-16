@@ -203,6 +203,7 @@ const initOwnerRegistration = () => {
     const submitButton = form.querySelector('[data-owner-submit]');
     const digitInputs = form.querySelectorAll('[data-digit-length]');
     const validationRules = [
+        { name: 'phone_number', label: 'Telefon nömrəsi', length: 7 },
         { name: 'voen', label: 'Vöen', length: 10 },
         { name: 'asan_imza', label: 'Asan İmza', length: 10 },
         { name: 'asan_id', label: 'Asan ID', length: 6 },
@@ -226,9 +227,16 @@ const initOwnerRegistration = () => {
         const formData = new FormData(form);
         const password = (formData.get('password') || '').trim();
         const rePassword = (formData.get('re_password') || '').trim();
+        const phonePrefix = (formData.get('phone_prefix') || '').trim();
+        const phoneNumber = (formData.get('phone_number') || '').trim();
 
         if (password !== rePassword) {
             alert('Şifrələr uyğun gəlmir.');
+            return;
+        }
+
+        if (!phonePrefix) {
+            alert('Zəhmət olmasa nömrə üçün prefiksi seçin.');
             return;
         }
 
@@ -240,9 +248,11 @@ const initOwnerRegistration = () => {
             }
         }
 
+        const phone = `+994${phonePrefix}${phoneNumber}`;
+
         const payload = {
             email: (formData.get('email') || '').trim(),
-            phone: (formData.get('phone') || '').trim(),
+            phone,
             password,
             re_password: rePassword,
             voen: formData.get('voen'),
@@ -382,7 +392,6 @@ const initEmployeeRegistration = () => {
             company_code: formData.get('company_code'),
             first_name: formData.get('first_name'),
             last_name: formData.get('last_name'),
-            father_name: formData.get('father_name'),
             fin_code: formData.get('fin_code'),
             phone_number: formData.get('phone_number'),
             email: formData.get('email'),
