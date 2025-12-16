@@ -1,15 +1,18 @@
+from django.conf import settings
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
 from django.contrib import messages
 from django.core.mail import BadHeaderError, send_mail
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 from typing import Optional
 
 from .forms import EmployeeForm, OwnerRegistrationForm, UserLoginForm, WorkerRegistrationForm
+from .cache_utils import clear_user_runtime_state
 from .models import OwnerRegistration, WorkerRegistration
 
 
@@ -253,4 +256,14 @@ def logout_view(request: HttpRequest) -> HttpResponse:
     logout(request)
     messages.info(request, "Hesabınızdan uğurla çıxış etdiniz.")
     return redirect('login')  # Çıxışdan sonra login səhifəsinə yönləndir
+
+
+@csrf_exempt
+@login_required
+@require_POST
+def clear_user_cache(request: HttpRequest) -> JsonResponse:
+    """Endpoint to clear cached/session data when the tab closes."""
+
+    clear_user_runtime_state(request.user, session=request.session)
+    return JsonResponse({"status": "cleared"})
 

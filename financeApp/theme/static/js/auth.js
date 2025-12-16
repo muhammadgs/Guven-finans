@@ -428,6 +428,20 @@ const initAuthHandlers = () => {
     const refreshButton = document.querySelector('[data-api-refresh-btn]');
     const meButton = document.querySelector('[data-api-me-btn]');
 
+    const sendClearCacheBeacon = () => {
+        const config = window.appConfig || {};
+        if (!navigator.sendBeacon || !config.isAuthenticated) return;
+
+        const endpoint = config.clearCacheUrl || '/api/clear-user-cache/';
+        const payload = JSON.stringify({ reason: 'page-unload', timestamp: Date.now() });
+        const blob = new Blob([payload], { type: 'application/json' });
+        navigator.sendBeacon(endpoint, blob);
+    };
+
+    if (window.addEventListener) {
+        window.addEventListener('beforeunload', sendClearCacheBeacon);
+    }
+
     if (loginForm) handleLogin(loginForm);
     if (logoutButton) handleLogout(logoutButton);
     if (refreshButton) handleRefresh(refreshButton);

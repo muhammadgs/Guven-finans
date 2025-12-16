@@ -371,6 +371,12 @@
     {% comment %}
     {% endcomment %}
 
+    <script>
+        window.appConfig = {
+            clearCacheUrl: "{% url 'clear-user-cache' %}",
+            isAuthenticated: {{ user.is_authenticated|yesno:"true,false" }},
+        };
+    </script>
     <script src="{% static 'js/auth.js' %}"></script>
 
     <script>
