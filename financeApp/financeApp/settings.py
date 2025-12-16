@@ -48,7 +48,7 @@ ALLOWED_HOSTS = [
     "guvenfinans.az",
     "www.guvenfinans.az",
     '127.0.0.1',
-    '192.168.0.143',
+    '192.168.98.1',
 ]
 
 
