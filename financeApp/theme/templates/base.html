@@ -26,6 +26,7 @@
         }
         :root {
             --header-offset: 9.5rem;
+            --loader-blue: #0F4ECF;
         }
 
         @media (max-width: 1024px) {
@@ -45,6 +46,97 @@
             backdrop-filter: none;
             color: #FFFFFF;
             transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Loader styling */
+        body.loader-active {
+            overflow: hidden;
+        }
+
+        #gti-loader {
+            position: fixed;
+            inset: 0;
+            display: grid;
+            place-items: center;
+            background: #FFFFFF;
+            z-index: 9999;
+            transition: opacity 0.3s ease;
+        }
+
+        #gti-loader.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #site-shell {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.32s ease;
+        }
+
+        body.loaded #site-shell {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .loader-inner {
+            width: min(62vw, 360px);
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loader-svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .loader-text-outline {
+            font-family: 'Cal Sans', 'Poppins', sans-serif;
+            font-size: 86px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            fill: transparent;
+            stroke: var(--loader-blue);
+            stroke-width: 2.4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 520;
+            stroke-dashoffset: 520;
+            animation: text-outline 0.9s ease-in-out forwards;
+        }
+
+        .loader-text-fill {
+            font-family: 'Cal Sans', 'Poppins', sans-serif;
+            font-size: 86px;
+            font-weight: 700;
+            letter-spacing: 4px;
+            fill: var(--loader-blue);
+            clip-path: inset(0 100% 0 0);
+            animation: text-fill 0.95s ease-in-out forwards 0.35s;
+        }
+
+        .accent-line {
+            stroke: var(--loader-blue);
+            stroke-width: 4.5;
+            stroke-linecap: round;
+            stroke-dasharray: 170;
+            stroke-dashoffset: 170;
+            opacity: 0.85;
+            animation: accent-draw 0.7s ease-in-out forwards 0.55s;
+        }
+
+        @keyframes text-outline {
+            to { stroke-dashoffset: 0; }
+        }
+
+        @keyframes text-fill {
+            to { clip-path: inset(0 0 0 0); }
+        }
+
+        @keyframes accent-draw {
+            to { stroke-dashoffset: 0; }
         }
 
         #main-header.header-scrolled {
@@ -164,6 +256,18 @@
     </style>
 </head>
 <body class="bg-white text-gray-900 antialiased font-poppins-light">
+    <!-- GTI splash/loader overlay -->
+    <div id="gti-loader" role="status" aria-live="polite" aria-label="Loading">
+        <div class="loader-inner">
+            <svg class="loader-svg" viewBox="0 0 320 180" aria-hidden="true">
+                <text x="50%" y="52%" text-anchor="middle" class="loader-text-outline">GTI</text>
+                <text x="50%" y="52%" text-anchor="middle" class="loader-text-fill">GTI</text>
+                <line x1="90" y1="120" x2="230" y2="120" class="accent-line" />
+            </svg>
+        </div>
+    </div>
+
+    <div id="site-shell">
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white">Skip to main content</a>
 
     <header id="main-header" class="fixed top-0 z-40 w-full transition-all duration-300 {% block header_extra_classes %}{% endblock %}">
@@ -368,6 +472,7 @@
             </div>
         </div>
     </footer>
+    </div>
     {% comment %}
     {% endcomment %}
 
@@ -381,6 +486,31 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const loader = document.getElementById('gti-loader');
+        const siteShell = document.getElementById('site-shell');
+        const body = document.body;
+        const MIN_DURATION = 1350; // milliseconds; aligns with requested 1.2-1.5s window
+        const startTime = performance.now();
+
+        // Ensure loader always plays once, even if page is ready fast
+        body.classList.add('loader-active');
+
+        const revealSite = () => {
+            if (loader) {
+                loader.classList.add('fade-out');
+                setTimeout(() => loader.remove(), 360);
+            }
+            body.classList.add('loaded');
+            body.classList.remove('loader-active');
+            if (siteShell) {
+                siteShell.style.pointerEvents = 'auto';
+            }
+        };
+
+        const elapsed = () => performance.now() - startTime;
+        const remaining = Math.max(0, MIN_DURATION - elapsed());
+        setTimeout(revealSite, remaining);
+
         const header = document.getElementById('main-header');
 
         // Header rəng dəyişmə effekti
