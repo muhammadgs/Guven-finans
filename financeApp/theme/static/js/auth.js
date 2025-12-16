@@ -296,9 +296,39 @@ const initEmployeeRegistration = () => {
     const fieldsWrapper = form.querySelector('[data-company-fields]');
     const companyStatus = form.querySelector('[data-company-status]');
     const submitButton = form.querySelector('[data-worker-submit]');
+    const passwordInput = form.querySelector('[name="password"]');
+    const confirmPasswordInput = form.querySelector('[name="confirm_password"]');
+    const passwordStatus = form.querySelector('[data-password-match-status]');
     const successRedirect = form.dataset.successRedirect;
 
     let companyVerified = false;
+
+    const updatePasswordStatus = () => {
+        if (!passwordStatus || !passwordInput || !confirmPasswordInput) return;
+        const password = passwordInput.value.trim();
+        const confirmPassword = confirmPasswordInput.value.trim();
+
+        if (!password || !confirmPassword) {
+            passwordStatus.classList.add('hidden');
+            passwordStatus.textContent = '';
+            passwordStatus.classList.remove('text-green-700', 'bg-green-50', 'text-red-700', 'bg-red-50', 'rounded-lg', 'px-3', 'py-2');
+            return;
+        }
+
+        passwordStatus.classList.add('rounded-lg', 'px-3', 'py-2');
+
+        if (password === confirmPassword) {
+            passwordStatus.textContent = 'Şifrələr uyğundur.';
+            passwordStatus.classList.remove('text-red-700', 'bg-red-50');
+            passwordStatus.classList.add('text-green-700', 'bg-green-50');
+            passwordStatus.classList.remove('hidden');
+        } else {
+            passwordStatus.textContent = 'Şifrələr uyğun gəlmir.';
+            passwordStatus.classList.remove('text-green-700', 'bg-green-50');
+            passwordStatus.classList.add('text-red-700', 'bg-red-50');
+            passwordStatus.classList.remove('hidden');
+        }
+    };
 
     const toggleFieldsVisibility = (visible) => {
         if (!fieldsWrapper) return;
@@ -371,6 +401,8 @@ const initEmployeeRegistration = () => {
         companyStatus?.classList.add('hidden');
         resetFormState();
     });
+    passwordInput?.addEventListener('input', updatePasswordStatus);
+    confirmPasswordInput?.addEventListener('input', updatePasswordStatus);
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -387,6 +419,8 @@ const initEmployeeRegistration = () => {
             updateStatus('Şifrələr uyğun gəlmir.', 'error');
             return;
         }
+
+        updateStatus('Şifrələr uyğundur.', 'success');
 
         const payload = {
             company_code: formData.get('company_code'),
