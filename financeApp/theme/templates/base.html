@@ -498,8 +498,12 @@
         const MIN_DURATION = 1350; // milliseconds; aligns with requested 1.2-1.5s window
         const startTime = performance.now();
 
-        // Ensure loader always plays once, even if page is ready fast
-        body.classList.add('loader-active');
+        // Determine whether the loader should run for this page load.
+        const navigationEntry = performance.getEntriesByType('navigation')[0];
+        const legacyNavType = performance.navigation?.type === 1 ? 'reload' : 'navigate';
+        const navigationType = navigationEntry?.type || legacyNavType;
+        const loaderAlreadyShown = sessionStorage.getItem('gtiLoaderShown') === '1';
+        const shouldShowLoader = navigationType === 'reload' || !loaderAlreadyShown;
 
         const revealSite = () => {
             if (loader) {
@@ -513,9 +517,23 @@
             }
         };
 
-        const elapsed = () => performance.now() - startTime;
-        const remaining = Math.max(0, MIN_DURATION - elapsed());
-        setTimeout(revealSite, remaining);
+        if (shouldShowLoader) {
+            // Ensure loader always plays once, even if page is ready fast
+            body.classList.add('loader-active');
+            sessionStorage.setItem('gtiLoaderShown', '1');
+
+            const elapsed = () => performance.now() - startTime;
+            const remaining = Math.max(0, MIN_DURATION - elapsed());
+            setTimeout(revealSite, remaining);
+        } else {
+            // Skip animation on internal navigations within the same tab session.
+            if (loader) loader.remove();
+            body.classList.add('loaded');
+            body.classList.remove('loader-active');
+            if (siteShell) {
+                siteShell.style.pointerEvents = 'auto';
+            }
+        }
 
         const header = document.getElementById('main-header');
 
