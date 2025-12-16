@@ -7,6 +7,17 @@
 {% block main_nav %}{% endblock %}
 
 {% block content %}
+<style>
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
+</style>
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-3xl">
         <h2 class="mt-6 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
@@ -22,31 +33,27 @@
 
             <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
                 <div class="sm:col-span-3">
-                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Şirkət e-poçtu</label>
-                    <div class="mt-1">
-                        <input id="email" name="email" type="email" required autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
-                    </div>
+                    <label for="email" class="mb-2 block text-sm font-semibold text-gray-900">Şirkət e-poçtu</label>
+                    <input id="email" name="email" type="email" required autocomplete="email"
+                           class="block w-full h-12 rounded-lg border border-gray-300 px-4 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="phone" class="block text-sm font-medium leading-6 text-gray-900">Şirkət əlaqə nömrəsi</label>
-                    <div class="mt-1">
-                        <input id="phone" name="phone" type="tel" required autocomplete="tel" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
-                    </div>
+                    <label for="phone" class="mb-2 block text-sm font-semibold text-gray-900">Şirkət əlaqə nömrəsi</label>
+                    <input id="phone" name="phone" type="tel" required autocomplete="tel"
+                           class="block w-full h-12 rounded-lg border border-gray-300 px-4 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Şifrə</label>
-                    <div class="mt-1">
-                        <input id="password" name="password" type="password" required autocomplete="new-password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
-                    </div>
+                    <label for="password" class="mb-2 block text-sm font-semibold text-gray-900">Şifrə</label>
+                    <input id="password" name="password" type="password" required autocomplete="new-password"
+                           class="block w-full h-12 rounded-lg border border-gray-300 px-4 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="re_password" class="block text-sm font-medium leading-6 text-gray-900">Şifrənin təkrarı</label>
-                    <div class="mt-1">
-                        <input id="re_password" name="re_password" type="password" required autocomplete="new-password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
-                    </div>
+                    <label for="re_password" class="mb-2 block text-sm font-semibold text-gray-900">Şifrənin təkrarı</label>
+                    <input id="re_password" name="re_password" type="password" required autocomplete="new-password"
+                           class="block w-full h-12 rounded-lg border border-gray-300 px-4 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
             </div>
 
@@ -56,45 +63,39 @@
 
             <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
                 <div class="sm:col-span-3">
-                    <label for="voen" class="block text-sm font-medium leading-6 text-gray-900">Vöen</label>
-                    <div class="mt-1">
-                        <input id="voen" name="voen" type="number" inputmode="numeric" pattern="\d{10}" data-digit-length="10" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
-                    </div>
+                    <label for="voen" class="mb-2 block text-sm font-semibold text-gray-900">Vöen</label>
+                    <input id="voen" name="voen" type="number" inputmode="numeric" pattern="\d{10}" data-digit-length="10" required
+                           class="block w-full h-12 rounded-lg border border-gray-300 px-4 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="asan_imza" class="block text-sm font-medium leading-6 text-gray-900">Asan İmza</label>
-                    <div class="mt-1">
-                        <input id="asan_imza" name="asan_imza" type="number" inputmode="numeric" pattern="\d{10}" data-digit-length="10" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
-                    </div>
+                    <label for="asan_imza" class="mb-2 block text-sm font-semibold text-gray-900">Asan İmza</label>
+                    <input id="asan_imza" name="asan_imza" type="number" inputmode="numeric" pattern="\d{10}" data-digit-length="10" required
+                           class="block w-full h-12 rounded-lg border border-gray-300 px-4 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="asan_id" class="block text-sm font-medium leading-6 text-gray-900">Asan ID</label>
-                    <div class="mt-1">
-                        <input id="asan_id" name="asan_id" type="number" inputmode="numeric" pattern="\d{6}" data-digit-length="6" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
-                    </div>
+                    <label for="asan_id" class="mb-2 block text-sm font-semibold text-gray-900">Asan ID</label>
+                    <input id="asan_id" name="asan_id" type="number" inputmode="numeric" pattern="\d{6}" data-digit-length="6" required
+                           class="block w-full h-12 rounded-lg border border-gray-300 px-4 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="pin1" class="block text-sm font-medium leading-6 text-gray-900">Pin 1</label>
-                    <div class="mt-1">
-                        <input id="pin1" name="pin1" type="number" inputmode="numeric" pattern="\d{4}" data-digit-length="4" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
-                    </div>
+                    <label for="pin1" class="mb-2 block text-sm font-semibold text-gray-900">Pin 1</label>
+                    <input id="pin1" name="pin1" type="number" inputmode="numeric" pattern="\d{4}" data-digit-length="4" required
+                           class="block w-full h-12 rounded-lg border border-gray-300 px-4 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="pin2" class="block text-sm font-medium leading-6 text-gray-900">Pin 2</label>
-                    <div class="mt-1">
-                        <input id="pin2" name="pin2" type="number" inputmode="numeric" pattern="\d{5}" data-digit-length="5" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
-                    </div>
+                    <label for="pin2" class="mb-2 block text-sm font-semibold text-gray-900">Pin 2</label>
+                    <input id="pin2" name="pin2" type="number" inputmode="numeric" pattern="\d{5}" data-digit-length="5" required
+                           class="block w-full h-12 rounded-lg border border-gray-300 px-4 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="puk" class="block text-sm font-medium leading-6 text-gray-900">Puk</label>
-                    <div class="mt-1">
-                        <input id="puk" name="puk" type="number" inputmode="numeric" pattern="\d{8}" data-digit-length="8" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
-                    </div>
+                    <label for="puk" class="mb-2 block text-sm font-semibold text-gray-900">Puk</label>
+                    <input id="puk" name="puk" type="number" inputmode="numeric" pattern="\d{8}" data-digit-length="8" required
+                           class="block w-full h-12 rounded-lg border border-gray-300 px-4 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
             </div>
 
