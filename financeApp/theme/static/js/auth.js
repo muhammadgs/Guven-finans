@@ -196,6 +196,87 @@ const handleMe = (button) => {
     });
 };
 
+const initOwnerRegistration = () => {
+    const form = document.querySelector('[data-owner-registration]');
+    if (!form) return;
+
+    const submitButton = form.querySelector('[data-owner-submit]');
+    const digitInputs = form.querySelectorAll('[data-digit-length]');
+    const validationRules = [
+        { name: 'voen', label: 'Vöen', length: 10 },
+        { name: 'asan_imza', label: 'Asan İmza', length: 10 },
+        { name: 'asan_id', label: 'Asan ID', length: 6 },
+        { name: 'pin1', label: 'Pin 1', length: 4 },
+        { name: 'pin2', label: 'Pin 2', length: 5 },
+        { name: 'puk', label: 'Puk', length: 8 },
+    ];
+
+    digitInputs.forEach((input) => {
+        input.addEventListener('input', () => {
+            const targetLength = parseInt(input.dataset.digitLength, 10);
+            if (!Number.isFinite(targetLength)) return;
+
+            const sanitized = (input.value || '').replace(/\D/g, '').slice(0, targetLength);
+            input.value = sanitized;
+        });
+    });
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const password = (formData.get('password') || '').trim();
+        const rePassword = (formData.get('re_password') || '').trim();
+
+        if (password !== rePassword) {
+            alert('Şifrələr uyğun gəlmir.');
+            return;
+        }
+
+        for (const { name, label, length } of validationRules) {
+            const value = (formData.get(name) || '').trim();
+            if (!value || value.length !== length || !/^\d+$/.test(value)) {
+                alert(`${label} ${length} rəqəmdən ibarət olmalıdır.`);
+                return;
+            }
+        }
+
+        const payload = {
+            email: (formData.get('email') || '').trim(),
+            phone: (formData.get('phone') || '').trim(),
+            password,
+            re_password: rePassword,
+            voen: formData.get('voen'),
+            asan_imza: formData.get('asan_imza'),
+            asan_id: formData.get('asan_id'),
+            pin1: formData.get('pin1'),
+            pin2: formData.get('pin2'),
+            puk: formData.get('puk'),
+        };
+
+        submitButton?.setAttribute('disabled', 'true');
+        updateStatus('Qeydiyyat göndərilir...', 'info');
+
+        try {
+            await apiRequest(`${API_BASE_URL}${API_VERSION}/companies`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            updateStatus('Qeydiyyat uğurla tamamlandı. Yönləndirilirsiniz...', 'success');
+            const redirectUrl = form.dataset.successRedirect || '/accounts/login/';
+            setTimeout(() => {
+                window.location.href = redirectUrl;
+            }, 800);
+        } catch (error) {
+            updateStatus(error.message || 'Qeydiyyat zamanı xəta baş verdi.', 'error');
+            submitButton?.removeAttribute('disabled');
+        }
+    });
+};
+
 const initEmployeeRegistration = () => {
     const form = document.querySelector('[data-worker-registration]');
     if (!form) return;
@@ -342,6 +423,7 @@ const initAuthHandlers = () => {
     if (logoutButton) handleLogout(logoutButton);
     if (refreshButton) handleRefresh(refreshButton);
     if (meButton) handleMe(meButton);
+    initOwnerRegistration();
     initEmployeeRegistration();
 };
 

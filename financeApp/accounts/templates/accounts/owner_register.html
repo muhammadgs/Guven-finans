@@ -15,109 +15,38 @@
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-3xl">
+        <div data-api-status class="hidden rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-sm font-medium text-blue-700"></div>
 
-        <form class="space-y-6" action="{% url 'register-owner' %}" method="POST" novalidate>
+        <form class="space-y-6" data-owner-registration data-success-redirect="{% url 'login' %}" novalidate>
             {% csrf_token %}
-
-            {% if form.non_field_errors %}
-            <div class="rounded-md bg-red-100 p-4 mb-4">
-                <div class="flex">
-                    <div class="flex-shrink-0">
-                        <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div class="ml-3">
-                        <h3 class="text-sm font-medium text-red-800">Formda xəta baş verdi:</h3>
-                        <div class="mt-2 text-sm text-red-700">
-                            <ul role="list" class="list-disc pl-5 space-y-1">
-                                {% for error in form.non_field_errors %}
-                                <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
 
             <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
                 <div class="sm:col-span-3">
-                    <label for="{{ form.first_name.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.first_name.label }}</label>
+                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Şirkət e-poçtu</label>
                     <div class="mt-1">
-                        {{ form.first_name }}
+                        <input id="email" name="email" type="email" required autocomplete="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
                     </div>
-                    {% if form.first_name.errors %}
-                    <div class="mt-1 text-sm text-red-600" id="{{ form.first_name.auto_id }}_error">
-                        {% for error in form.first_name.errors %}<p>{{ error }}</p>{% endfor %}
-                    </div>
-                    {% endif %}
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="{{ form.last_name.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.last_name.label }}</label>
+                    <label for="phone" class="block text-sm font-medium leading-6 text-gray-900">Şirkət əlaqə nömrəsi</label>
                     <div class="mt-1">
-                        {{ form.last_name }}
+                        <input id="phone" name="phone" type="tel" required autocomplete="tel" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
                     </div>
-                    {% if form.last_name.errors %}
-                    <div class="mt-1 text-sm text-red-600" id="{{ form.last_name.auto_id }}_error">
-                        {% for error in form.last_name.errors %}<p>{{ error }}</p>{% endfor %}
-                    </div>
-                    {% endif %}
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="{{ form.email.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.email.label }} (Giriş üçün istifadə olunacaq)</label>
+                    <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Şifrə</label>
                     <div class="mt-1">
-                        {{ form.email }}
+                        <input id="password" name="password" type="password" required autocomplete="new-password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
                     </div>
-                    {% if form.email.errors %}
-                    <div class="mt-1 text-sm text-red-600" id="{{ form.email.auto_id }}_error">
-                        {% for error in form.email.errors %}<p>{{ error }}</p>{% endfor %}
-                    </div>
-                    {% endif %}
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="{{ form.phone_number.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.phone_number.label }}</label>
-                    <div class="mt-1 flex rounded-lg shadow-sm">
-                        {{ form.phone_prefix }}
-                        {{ form.phone_number }}
-                    </div>
-                    {% if form.phone_prefix.errors %}
-                    <div class="mt-1 text-sm text-red-600">
-                        {% for error in form.phone_prefix.errors %}<p>Ölkə kodu: {{ error }}</p>{% endfor %}
-                    </div>
-                    {% endif %}
-                    {% if form.phone_number.errors %}
-                    <div class="mt-1 text-sm text-red-600">
-                        {% for error in form.phone_number.errors %}<p>Mobil nömrə: {{ error }}</p>{% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div class="sm:col-span-3">
-                    <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.password.label }}</label>
+                    <label for="re_password" class="block text-sm font-medium leading-6 text-gray-900">Şifrənin təkrarı</label>
                     <div class="mt-1">
-                        {{ form.password }}
+                        <input id="re_password" name="re_password" type="password" required autocomplete="new-password" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
                     </div>
-                    {% if form.password.errors %}
-                    <div class="mt-1 text-sm text-red-600" id="{{ form.password.auto_id }}_error">
-                        {% for error in form.password.errors %}<p>{{ error }}</p>{% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div class="sm:col-span-3">
-                    <label for="{{ form.password_confirm.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.password_confirm.label }}</label>
-                    <div class="mt-1">
-                        {{ form.password_confirm }}
-                    </div>
-                    {% if form.password_confirm.errors %}
-                    <div class="mt-1 text-sm text-red-600" id="{{ form.password_confirm.auto_id }}_error">
-                        {% for error in form.password_confirm.errors %}<p>{{ error }}</p>{% endfor %}
-                    </div>
-                    {% endif %}
                 </div>
             </div>
 
@@ -127,62 +56,50 @@
 
             <div class="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
                 <div class="sm:col-span-3">
-                    <label for="{{ form.company_name.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.company_name.label }}</label>
+                    <label for="voen" class="block text-sm font-medium leading-6 text-gray-900">Vöen</label>
                     <div class="mt-1">
-                        {{ form.company_name }}
+                        <input id="voen" name="voen" type="number" inputmode="numeric" pattern="\d{10}" data-digit-length="10" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
                     </div>
-                    {% if form.company_name.errors %}
-                    <div class="mt-1 text-sm text-red-600" id="{{ form.company_name.auto_id }}_error">
-                        {% for error in form.company_name.errors %}<p>{{ error }}</p>{% endfor %}
-                    </div>
-                    {% endif %}
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="{{ form.company_email.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.company_email.label }}</label>
+                    <label for="asan_imza" class="block text-sm font-medium leading-6 text-gray-900">Asan İmza</label>
                     <div class="mt-1">
-                        {{ form.company_email }}
+                        <input id="asan_imza" name="asan_imza" type="number" inputmode="numeric" pattern="\d{10}" data-digit-length="10" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
                     </div>
-                    {% if form.company_email.errors %}
-                    <div class="mt-1 text-sm text-red-600" id="{{ form.company_email.auto_id }}_error">
-                        {% for error in form.company_email.errors %}<p>{{ error }}</p>{% endfor %}
-                    </div>
-                    {% endif %}
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="{{ form.company_phone_number.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.company_phone_number.label }}</label>
-                    <div class="mt-1 flex rounded-lg shadow-sm">
-                        {{ form.company_phone_prefix }}
-                        {{ form.company_phone_number }}
+                    <label for="asan_id" class="block text-sm font-medium leading-6 text-gray-900">Asan ID</label>
+                    <div class="mt-1">
+                        <input id="asan_id" name="asan_id" type="number" inputmode="numeric" pattern="\d{6}" data-digit-length="6" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
                     </div>
-                    {% if form.company_phone_prefix.errors %}
-                    <div class="mt-1 text-sm text-red-600">
-                        {% for error in form.company_phone_prefix.errors %}<p>Ölkə kodu: {{ error }}</p>{% endfor %}
-                    </div>
-                    {% endif %}
-                    {% if form.company_phone_number.errors %}
-                    <div class="mt-1 text-sm text-red-600">
-                        {% for error in form.company_phone_number.errors %}<p>Şirkət nömrəsi: {{ error }}</p>{% endfor %}
-                    </div>
-                    {% endif %}
                 </div>
 
-                <div class="col-span-full">
-                    <label for="{{ form.company_address.id_for_label }}" class="block text-sm font-medium leading-6 text-gray-900">{{ form.company_address.label }}</label>
+                <div class="sm:col-span-3">
+                    <label for="pin1" class="block text-sm font-medium leading-6 text-gray-900">Pin 1</label>
                     <div class="mt-1">
-                        {{ form.company_address }}
+                        <input id="pin1" name="pin1" type="number" inputmode="numeric" pattern="\d{4}" data-digit-length="4" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
                     </div>
-                    {% if form.company_address.errors %}
-                    <div class="mt-1 text-sm text-red-600" id="{{ form.company_address.auto_id }}_error">
-                        {% for error in form.company_address.errors %}<p>{{ error }}</p>{% endfor %}
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label for="pin2" class="block text-sm font-medium leading-6 text-gray-900">Pin 2</label>
+                    <div class="mt-1">
+                        <input id="pin2" name="pin2" type="number" inputmode="numeric" pattern="\d{5}" data-digit-length="5" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
                     </div>
-                    {% endif %}
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label for="puk" class="block text-sm font-medium leading-6 text-gray-900">Puk</label>
+                    <div class="mt-1">
+                        <input id="puk" name="puk" type="number" inputmode="numeric" pattern="\d{8}" data-digit-length="8" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" />
+                    </div>
                 </div>
             </div>
 
             <div>
-                <button type="submit"
+                <button type="submit" data-owner-submit
                         class="flex w-full justify-center rounded-md bg-blue-600 px-3 py-2.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
                     Təsdiqlə və Göndər
                 </button>
