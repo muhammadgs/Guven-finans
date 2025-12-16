@@ -80,63 +80,72 @@
         }
 
         .loader-inner {
-            width: min(62vw, 360px);
-            height: 200px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            width: min(68vw, 360px);
+            aspect-ratio: 320 / 243;
+            position: relative;
+            display: grid;
+            place-items: center;
         }
 
-        .loader-svg {
-            width: 100%;
-            height: 100%;
+        .logo-layer {
+            position: absolute;
+            inset: 0;
+            background: var(--loader-blue);
+            mask-image: url('{% static "images/logo.png" %}');
+            mask-repeat: no-repeat;
+            mask-position: center;
+            mask-size: contain;
+            -webkit-mask-image: url('{% static "images/logo.png" %}');
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            -webkit-mask-size: contain;
+            filter: drop-shadow(0 14px 28px rgba(15, 78, 207, 0.16));
+            transform-origin: center;
+            opacity: 0;
         }
 
-        .loader-text-outline {
-            font-family: 'Cal Sans', 'Poppins', sans-serif;
-            font-size: 86px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            fill: transparent;
-            stroke: var(--loader-blue);
-            stroke-width: 2.4;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            stroke-dasharray: 520;
-            stroke-dashoffset: 520;
-            animation: text-outline 0.9s ease-in-out forwards;
+        .logo-trace {
+            background: linear-gradient(120deg, rgba(15, 78, 207, 0.05), rgba(15, 78, 207, 0.45), rgba(15, 78, 207, 0.05));
+            background-size: 220% 100%;
+            animation: trace-wipe 0.95s cubic-bezier(0.65, 0, 0.35, 1) forwards;
         }
 
-        .loader-text-fill {
-            font-family: 'Cal Sans', 'Poppins', sans-serif;
-            font-size: 86px;
-            font-weight: 700;
-            letter-spacing: 4px;
-            fill: var(--loader-blue);
-            clip-path: inset(0 100% 0 0);
-            animation: text-fill 0.95s ease-in-out forwards 0.35s;
+        .logo-fill {
+            animation: logo-form 1.2s ease-in-out forwards 0.08s;
         }
 
-        .accent-line {
-            stroke: var(--loader-blue);
-            stroke-width: 4.5;
-            stroke-linecap: round;
-            stroke-dasharray: 170;
-            stroke-dashoffset: 170;
-            opacity: 0.85;
-            animation: accent-draw 0.7s ease-in-out forwards 0.55s;
+        @keyframes trace-wipe {
+            0% {
+                opacity: 0;
+                background-position: 120% 50%;
+                clip-path: inset(0 100% 0 0);
+                transform: scale(0.9);
+            }
+            35% { opacity: 1; }
+            60% { background-position: 50% 50%; }
+            100% {
+                opacity: 0.75;
+                background-position: -20% 50%;
+                clip-path: inset(0 0 0 0);
+                transform: scale(1);
+            }
         }
 
-        @keyframes text-outline {
-            to { stroke-dashoffset: 0; }
-        }
-
-        @keyframes text-fill {
-            to { clip-path: inset(0 0 0 0); }
-        }
-
-        @keyframes accent-draw {
-            to { stroke-dashoffset: 0; }
+        @keyframes logo-form {
+            0% {
+                opacity: 0;
+                clip-path: inset(0 96% 0 0);
+                transform: scale(0.86);
+            }
+            45% {
+                clip-path: inset(0 36% 0 0);
+                transform: scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                clip-path: inset(0 0 0 0);
+                transform: scale(1);
+            }
         }
 
         #main-header.header-scrolled {
@@ -259,11 +268,8 @@
     <!-- GTI splash/loader overlay -->
     <div id="gti-loader" role="status" aria-live="polite" aria-label="Loading">
         <div class="loader-inner">
-            <svg class="loader-svg" viewBox="0 0 320 180" aria-hidden="true">
-                <text x="50%" y="52%" text-anchor="middle" class="loader-text-outline">GTI</text>
-                <text x="50%" y="52%" text-anchor="middle" class="loader-text-fill">GTI</text>
-                <line x1="90" y1="120" x2="230" y2="120" class="accent-line" />
-            </svg>
+            <span class="logo-layer logo-trace" aria-hidden="true"></span>
+            <span class="logo-layer logo-fill" aria-hidden="true"></span>
         </div>
     </div>
 
