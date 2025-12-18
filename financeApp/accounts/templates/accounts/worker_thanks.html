@@ -1,36 +1,11 @@
-{% extends "base.html" %}
-
-{% block title %}Müraciətiniz qəbul olundu | Güvən Finans{% endblock %}
-
-{% block header_extra_classes %}bg-white shadow-md header-scrolled no-scroll-effect{% endblock %}
-{% block main_nav %}{% endblock %}
-
-{% block content %}
-<section class="bg-gray-50 py-20">
-    <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-        <div class="rounded-3xl bg-white p-10 text-center shadow-xl ring-1 ring-gray-100">
-            <h1 class="text-3xl font-cal-sans text-gray-900">Müraciətiniz qəbul olundu</h1>
-            <p class="mt-4 text-base text-gray-600">
-                Müraciətiniz üçün təşəkkür edirik. Komandamız məlumatlarınızı nəzərdən keçirəcək və uyğun olduğunuz təqdirdə sizinlə əlaqə saxlayacaq.
-            </p>
-
-            {% if messages %}
-                <div class="mt-6 space-y-3">
-                    {% for message in messages %}
-                        <div class="rounded-lg border border-green-100 bg-green-50 px-4 py-3 text-sm text-green-700">
-                            {{ message }}
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-            <div class="mt-10">
-                <a href="{% url 'register-choice' %}"
-                   class="inline-flex items-center justify-center rounded-[3.5rem] border border-blue-200 bg-blue-50 px-6 py-3 text-sm font-cal-sans text-blue-700 shadow-sm transition hover:bg-blue-100">
-                    Seçim səhifəsinə qayıt
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=../../../../frontend/worker-thanks.html">
+  <title>Müraciət təsdiqi</title>
+</head>
+<body>
+  <p>Müraciət təsdiqi <a href="../../../../frontend/worker-thanks.html">frontend/worker-thanks.html</a> faylındadır.</p>
+</body>
+</html>
