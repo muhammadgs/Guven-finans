@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>İşçi qeydiyyatı | Güvən Finans</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+  <div id="loader-overlay" class="loader-overlay">
+    <img class="loader-logo" src="../financeApp/staticfiles/images/logo.png" alt="Yüklənir">
+  </div>
+  <header id="site-header" class="header-shell"></header>
+  <main class="page-shell">
+    <section class="section" style="padding-top:3rem;">
+      <div class="container" style="max-width:980px;">
+        <div class="card" style="padding:0; overflow:hidden; border-radius:1.75rem;">
+          <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+            <div style="background:linear-gradient(135deg,#2563eb,#4f46e5); color:#fff; padding:2rem; display:grid; gap:1rem;">
+              <p class="badge" style="background:rgba(255,255,255,0.1); color:#dbeafe;">Güvən Finans</p>
+              <h2 class="section-title" style="color:#fff; margin:0;">İşçi qeydiyyatı</h2>
+              <p style="color:#e0e7ff;">Komandanıza qoşulmaq üçün məlumatlarınızı göndərin. Müraciətiniz qısa zamanda nəzərdən keçiriləcək.</p>
+              <ul class="check-list" style="color:#e0f2fe;">
+                <li><i class="fa-solid fa-check"></i> Sürətli müraciət</li>
+                <li><i class="fa-solid fa-check"></i> Şəffaf proses</li>
+                <li><i class="fa-solid fa-check"></i> Güvənli məlumat saxlanması</li>
+              </ul>
+            </div>
+            <div style="padding:2rem;">
+              <div data-register-status></div>
+              <form data-worker-register class="form-grid">
+                <div class="form-group">
+                  <label class="label" for="isci-first">Ad</label>
+                  <input class="input" id="isci-first" name="first_name" required>
+                </div>
+                <div class="form-group">
+                  <label class="label" for="isci-last">Soyad</label>
+                  <input class="input" id="isci-last" name="last_name" required>
+                </div>
+                <div class="form-group">
+                  <label class="label" for="isci-phone">Telefon nömrəsi</label>
+                  <div style="display:flex; gap:0.5rem;">
+                    <select class="select" name="phone_prefix" style="width:110px;">
+                      <option value="050">050</option>
+                      <option value="051">051</option>
+                      <option value="055">055</option>
+                      <option value="070">070</option>
+                      <option value="077">077</option>
+                      <option value="099">099</option>
+                    </select>
+                    <input class="input" id="isci-phone" name="phone_number" placeholder="XXXXXXX" required>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="label" for="isci-email">E-poçt</label>
+                  <input class="input" id="isci-email" type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                  <label class="label" for="isci-position">Vəzifə</label>
+                  <input class="input" id="isci-position" name="position" required>
+                </div>
+                <div style="grid-column:1/-1; margin-top:0.5rem;">
+                  <button class="btn btn-primary" type="submit" style="width:100%;">Göndər</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer" id="site-footer"></footer>
+  <script src="assets/scripts/api.js"></script>
+  <script src="assets/scripts/auth.js"></script>
+  <script src="assets/scripts/main.js"></script>
+</body>
+</html>
